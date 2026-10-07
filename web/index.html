@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Nourah’s Snake Learning Lab: train a neural network, explore reinforcement learning and test what-if replay in your browser."
+    />
+    <title>Snake Learning Lab · Nourah Alotaibi</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <a href="https://www.nora-alotaibi.com/project">nourah. / the lab</a>
+      <nav>
+        <a href="https://github.com/Nourah-Alotaibi/snake-ai-game"
+          >Code & report ↗</a
+        ><button id="theme">Light mode</button>
+      </nav>
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">
+            What’s the best way to learn something new? Gamify it!
+          </p>
+          <h1>A Nokia memory.<br /><em>A neural twist.</em></h1>
+          <p>
+            Snake was my first digital game, on my mum’s old Nokia. I first
+            built my own version when I started studying AI: a familiar game
+            helped the concepts click—and helped me ace my exams. Now it has a
+            new question to tackle:
+            <strong>can it learn from the moves it never made?</strong>
+          </p>
+        </div>
+        <aside class="intro-note">
+          <span aria-hidden="true">↳</span>
+          <h2>Eat. Try. Learn.<br /><em>Ask “what if?”</em></h2>
+          <p>
+            A real neural network. A tiny world.<br />And the freedom to turn a
+            few knobs.
+          </p>
+        </aside>
+      </section>
+      <section class="workspace" aria-label="Snake learning experiment">
+        <div class="play-column">
+          <div class="panel board-panel">
+            <div class="panel-heading">
+              <span class="eyebrow">01 / Meet your learner</span
+              ><span id="mode-badge" class="pill">Fresh brain</span>
+            </div>
+            <canvas
+              id="board"
+              width="600"
+              height="600"
+              aria-label="Live Snake board. Text scores and decisions are available below."
+            ></canvas>
+            <div class="score-strip">
+              <div>
+                <strong id="score">0</strong><span>apples this game</span>
+              </div>
+              <div>
+                <strong id="episodes">0</strong><span>training games</span>
+              </div>
+              <div>
+                <strong id="average">0.0</strong><span>last 20 average</span>
+              </div>
+            </div>
+            <p id="decision" class="decision">Ready for its first lesson.</p>
+            <div class="buttons">
+              <button id="run" class="primary">Start learning</button
+              ><button id="step">Single move</button
+              ><button id="watch">Watch this brain</button>
+            </div>
+            <div class="speed">
+              <label for="speed">Playback speed</label
+              ><select id="speed">
+                <option value="10">Slow · follow each move</option>
+                <option value="120" selected>Quick · 120 moves/s</option>
+                <option value="2000">Fast lab · up to 2,000 moves/s</option>
+              </select>
+            </div>
+            <p class="small">
+              Speed changes how fast the experiment runs, not the learning
+              rules. Pause to inspect a decision.
+            </p>
+          </div>
+          <div class="panel">
+            <div class="panel-heading">
+              <span class="eyebrow">02 / A learning diary</span
+              ><button id="example">Try a trained snake</button>
+            </div>
+            <canvas
+              id="chart"
+              width="720"
+              height="180"
+              aria-label="Training apples per game and rolling 20-game mean"
+            ></canvas>
+            <p class="small">
+              Dim line: apples each game. Blue line: rolling mean. Training can
+              wobble; this is not an accuracy score.
+            </p>
+            <div class="mini-stats">
+              <span>Updates <b id="updates">0</b></span
+              ><span>Replay <b id="memory">0</b></span
+              ><span>Loss <b id="loss">—</b></span
+              ><span>What-if samples <b id="simulated">0</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="controls-column">
+          <div class="panel">
+            <div class="panel-heading">
+              <span class="eyebrow">03 / A little brain chemistry</span>
+            </div>
+            <p>
+              Change one thing. Make a prediction. See what actually happens.
+            </p>
+            <div class="preset-buttons">
+              <button data-preset="default">The curious one</button
+              ><button data-preset="noplanning">No “what if?” replay</button
+              ><button data-preset="myopic">Only the next snack</button
+              ><button data-preset="tiny">A smaller brain</button>
+            </div>
+            <form id="settings">
+              <div id="main-controls" class="control-grid"></div>
+              <details>
+                <summary>Open the deeper-learning drawer</summary>
+                <div id="advanced-controls" class="control-grid"></div>
+              </details>
+              <button class="primary wide" type="submit">
+                Apply settings & start fresh
+              </button>
+              <p class="small">
+                This resets the current brain and diary. Save your brain first
+                if you want to keep it.
+              </p>
+            </form>
+          </div>
+          <div class="panel">
+            <span class="eyebrow">04 / What is it thinking?</span>
+            <h2>The last decision, unpacked.</h2>
+            <div id="q-values"></div>
+            <p class="small">
+              Q-values estimate future reward. They are not probabilities. A
+              curious snake sometimes chooses a random move.
+            </p>
+            <details>
+              <summary>Peek at the network</summary>
+              <div id="network" class="network"></div>
+              <p id="architecture" class="small"></p>
+              <div id="sensors" class="sensors"></div>
+              <p class="small">
+                Eleven hand-designed signals describe nearby danger, direction
+                and food. This snake does not see pixels or the entire board.
+              </p>
+            </details>
+          </div>
+          <div class="panel">
+            <span class="eyebrow">05 / Explainable AI · SHAP</span>
+            <h2>Okay, but why that turn?</h2>
+            <p>
+              Pause this board and unpack the brain’s preferred next move. Which
+              signals tip the balance?
+            </p>
+            <button id="explain">Explain this board</button>
+            <div id="explanation" aria-live="polite"></div>
+            <p class="small">
+              Exact SHAP values for the preferred move versus its runner-up,
+              relative to an all-zero sensor reference. Blue supports the
+              preferred move; gold supports the alternative. This explains the
+              network’s scores; curiosity may still choose a random action.
+            </p>
+            <details>
+              <summary>What does the reference mean?</summary>
+              <p class="small">
+                We switch each sensor between its current value and zero,
+                evaluate all 2,048 combinations, and average its contribution
+                across every order of adding sensors. Zero means all signals
+                off, not a typical board. Some combinations are not valid game
+                states, so these are model attributions, not causal explanations
+                of the world.
+              </p>
+            </details>
+          </div>
+          <div class="panel">
+            <span class="eyebrow">06 / Give it a report card</span>
+            <h2>Better than wandering?</h2>
+            <p>
+              Freeze the brain and compare it with a random player on the same
+              20 starting seeds. No training happens during the check.
+            </p>
+            <button id="evaluate">Run 20 test games</button>
+            <div id="evaluation" aria-live="polite"></div>
+            <p class="small">
+              A small, repeatable check—not a general performance claim.
+              Repeating these seeds is not fresh validation.
+            </p>
+            <div class="buttons">
+              <button id="save">Save brain & diary</button
+              ><label class="file-button" for="load">Load a brain</label
+              ><input
+                id="load"
+                type="file"
+                accept="application/json,.json"
+                class="visually-hidden"
+              />
+            </div>
+            <p class="small">
+              Saved brains keep weights and settings; replay memory and
+              optimizer history start fresh when loaded.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="explain-grid">
+        <article class="panel">
+          <p class="eyebrow">The contribution / beyond a scoreboard</p>
+          <h2>What about the turn it didn’t take?</h2>
+          <p>
+            With <strong>“what if?” replay</strong>, each real move also creates
+            two one-step branches in a copy of the game. The outcomes of those
+            unchosen moves join replay memory, while the real board stays
+            untouched.
+          </p>
+          <p>
+            This is a model-based extension to Double DQN, inspired by
+            Dyna-style planning. It uses known game rules and extra simulator
+            queries—not magic foresight. Turn it off to compare with standard
+            replay.
+          </p>
+          <a
+            href="https://github.com/Nourah-Alotaibi/snake-ai-game/blob/main/REPORT.md"
+            >Read the controlled comparison ↗</a
+          >
+        </article>
+        <article class="panel">
+          <p class="eyebrow">A little honesty goes a long way</p>
+          <h2>Learning is messier than a high score.</h2>
+          <p>
+            Weights really update through backpropagation and Adam. A target
+            network and replay buffer help stabilize learning. The optional
+            distance hint is designed into the reward; the agent is not
+            discovering everything unaided.
+          </p>
+          <p>
+            Longer snakes can trap themselves. The small sensor view hides parts
+            of the world, and more neurons or a faster learning rate can make a
+            run worse. These limitations are part of the experiment.
+          </p>
+          <a
+            href="https://github.com/Nourah-Alotaibi/snake-ai-game/blob/main/SOURCES.md"
+            >Ideas, references & credits ↗</a
+          >
+        </article>
+      </section>
+      <p id="status" role="status" aria-live="polite">Preparing the lab…</p>
+      <footer>
+        Made by Nourah Alotaibi · Runs in your browser. No account, paid API or
+        training-data upload.
+      </footer>
+    </main>
+    <noscript>This interactive lab needs JavaScript.</noscript>
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>
