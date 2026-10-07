@@ -4,7 +4,9 @@
 
 Snake was the first digital game I played on my mum’s old Nokia, and it stayed with me. When I first started studying AI, I built my own version to make unfamiliar concepts click—and it helped me ace my exams. That early prototype used simple movement rules. This version gives the little snake a neural network that actually learns.
 
-**[Play the learning lab](https://www.nora-alotaibi.com/snake-lab/) · [Read the technical report](REPORT.md) · [Sources & credits](SOURCES.md)**
+Turn the knobs and see how rewards guide behavior, why exploration matters and how learning rate changes training. It’s a familiar, playful way to make abstract AI concepts click.
+
+**[Play the learning lab](https://www.nora-alotaibi.com/snake-game/) · [Read the technical report](REPORT.md) · [Sources & credits](SOURCES.md)**
 
 ## Can it learn from a move it never made?
 
