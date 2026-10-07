@@ -319,6 +319,7 @@ worker.onmessage = ({ data }) => {
     return;
   }
   if (data.type === "loaded") {
+    lastEvaluation = null;
     setControls(data.settings);
     $("evaluation").textContent = "";
     return;
