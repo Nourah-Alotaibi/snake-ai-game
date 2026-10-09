@@ -963,3 +963,5 @@ body .interactive-network .network-links .selected-link { opacity:.65; stroke-wi
 .workspace > .board-panel { margin-top:var(--game-offset, 0px); }
 .game-move-controls button { min-height:40px; padding:8px 10px; font-size:13px; font-weight:650; color:var(--ink); background:var(--soft); border:1px solid var(--line); }
 @media(max-width:600px) { .game-move-controls button { min-height:44px; font-size:14px; } }
+
+.controls-column .panel-move-controls button,.play-column .panel-move-controls button,.game-move-controls button:not(:last-child) { min-width:44px; min-height:44px; font-size:19px; padding:7px; }

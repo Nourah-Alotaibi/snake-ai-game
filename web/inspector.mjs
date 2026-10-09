@@ -9,7 +9,7 @@ function svgEl(tag, attrs, text) {
   return el;
 }
 export function createInspector(worker) {
-  let lastFrame = "", animate = false;
+  let lastFrame = "", animate = false, pausePending = false;
   let state, selected = [1,0], spacing = 115, inspecting = false, wasRunning = false;
   const hosts = ['network','network-large'].map(id => {
     const host = document.getElementById(id);
@@ -19,8 +19,8 @@ export function createInspector(worker) {
     const notes = host.parentElement.querySelector(".network-notes");
     (notes ?? host).after(ui);
     ui.querySelector('.inspect-pause').onclick = () => {
-      if (!inspecting) { wasRunning = !!state?.running; inspecting = true; worker.postMessage({type:'run',value:false}); }
-      else { inspecting = false; worker.postMessage({type:'run',value:wasRunning}); }
+      if (!inspecting) { wasRunning = !!state?.running; inspecting = true; pausePending = true; worker.postMessage({type:'run',value:false}); }
+      else { inspecting = false; pausePending = false; worker.postMessage({type:'run',value:wasRunning}); }
       render(state);
     };
     ui.querySelector('.inspect-step').onclick = () => worker.postMessage({type:'step'});
@@ -42,6 +42,11 @@ export function createInspector(worker) {
   });
   function render(s) {
     if (!s?.inspection) return;
+    // A main game Start/Watch action exits inspection once pause was acknowledged.
+    if (s !== state && inspecting) {
+      if (pausePending) { if (!s.running) pausePending = false; }
+      else if (s.running || s.mode !== state?.mode) { inspecting = false; wasRunning = false; }
+    }
     const frame = `${s.mode}:${s.steps}:${s.game.steps}:${s.updates}`;
     animate = s.running && !inspecting && frame !== lastFrame;
     lastFrame = frame;
@@ -73,7 +78,7 @@ export function createInspector(worker) {
           node.append(svgEl('title',{},`${name(k,j)}: ${fmt(a[j])}`)); svg.append(node);
           if (k===last) { svg.append(svgEl('text',{x:x+15,y:y(k,j)-4,class:'network-action','data-layer':k,'data-neuron':j},actions[j])); svg.append(svgEl('text',{x:x+15,y:y(k,j)+16,class:'network-score','data-layer':k,'data-neuron':j},fmt(a[j]))); }
         });
-        if (counts[k]<a.length) svg.append(svgEl('text',{x,y:263,'text-anchor':'middle',class:'network-count'},`+${a.length-counts[k]} more · use selector`));
+        if (counts[k]<a.length) svg.append(svgEl('text',{x,y:263,'text-anchor':'middle',class:'network-count'},`+${a.length-counts[k]} more`));
       });
       host.replaceChildren(svg);
       ui.querySelector('.inspect-pause').textContent = inspecting ? 'Resume live view' : 'Pause & inspect';

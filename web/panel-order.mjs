@@ -12,8 +12,8 @@ originals.forEach((group,side)=>group.forEach((card,index)=>{
   card.dataset.panelId=`${columns[side].selector.slice(1)}-${index}`;card.dataset.panelName=labels[side*2+index];
   const controls=document.createElement('div');controls.className='panel-move-controls';controls.setAttribute('role','group');controls.setAttribute('aria-label',`Reorder ${card.dataset.panelName}`);
   const caption=document.createElement('span');caption.textContent='Move this box';controls.append(caption);
-  for(const [direction,text] of [['up','↑ Move up'],['down','↓ Move down'],['left','← Move left'],['right','→ Move right']]){
-    const button=document.createElement('button');button.type='button';button.textContent=text;button.dataset.move=direction;button.setAttribute('aria-label',`Move ${direction}: ${card.dataset.panelName}`);
+  for(const [direction,text] of [['up','⬆️'],['down','⬇️'],['left','⬅️'],['right','➡️']]){
+    const button=document.createElement('button');button.type='button';button.textContent=text;button.dataset.move=direction;button.setAttribute('aria-label',`Move ${direction}: ${card.dataset.panelName}`);button.title=`Move ${direction}: ${card.dataset.panelName}`;
     button.onclick=()=>{
       const current=card.parentElement,currentSide=columns.findIndex(g=>g.column===current),siblings=[...current.children].filter(el=>el.dataset.panelId),position=siblings.indexOf(card);
       if(direction==='up'||direction==='down'){const neighbor=siblings[position+(direction==='up'?-1:1)];if(!neighbor)return;if(direction==='up')current.insertBefore(card,neighbor);else current.insertBefore(neighbor,card);}
@@ -37,7 +37,8 @@ if (game) {
   controls.setAttribute('role','group'); controls.setAttribute('aria-label','Move the game vertically');
   const caption = document.createElement('span'); caption.textContent = 'Move game box'; controls.append(caption);
   const up = document.createElement('button'), down = document.createElement('button'), reset = document.createElement('button');
-  up.textContent = '↑ Move game up'; down.textContent = '↓ Move game down'; reset.textContent = 'Reset position';
+  up.textContent = '⬆️'; down.textContent = '⬇️';up.title='Move game up';down.title='Move game down';
+  up.setAttribute('aria-label','Move game up'); down.setAttribute('aria-label','Move game down'); reset.textContent = 'Reset position';
   [up,down,reset].forEach(button=>{button.type='button'; controls.append(button);});
   game.prepend(controls);
   function position() {
