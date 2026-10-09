@@ -64,3 +64,31 @@ columns.forEach(({selector,name,labels}) => {
   }
   update();
 });
+
+// The center has one card: move it vertically in explicit, reversible increments.
+const game = document.querySelector('.board-panel');
+if (game) {
+  const positionKey = 'snake-lab-game-offset-v1';
+  let offset = 0;
+  try { const value = Number(localStorage.getItem(positionKey)); if (Number.isFinite(value)) offset = Math.max(0, Math.min(800, value)); } catch {}
+  const controls = document.createElement('div'); controls.className = 'panel-move-controls game-move-controls';
+  controls.setAttribute('role','group'); controls.setAttribute('aria-label','Move the game vertically');
+  const caption = document.createElement('span'); caption.textContent = 'Move game box'; controls.append(caption);
+  const up = document.createElement('button'), down = document.createElement('button'), reset = document.createElement('button');
+  up.textContent = '↑ Move game up'; down.textContent = '↓ Move game down'; reset.textContent = 'Reset position';
+  [up,down,reset].forEach(button=>{button.type='button'; controls.append(button);});
+  game.prepend(controls);
+  function position() {
+    game.style.setProperty('--game-offset', `${offset}px`);
+    up.disabled = offset === 0; down.disabled = offset === 800; reset.disabled = offset === 0;
+    try { localStorage.setItem(positionKey, String(offset)); } catch {}
+  }
+  function move(delta) {
+    offset = Math.max(0,Math.min(800,offset+delta)); position();
+    live.textContent = `Game position ${offset===0?'at the top':`${offset} pixels below the top`}.`;
+    if (document.activeElement?.disabled) (offset===0?down:up).focus({preventScroll:true});
+    game.scrollIntoView({block:'nearest',behavior:'instant'});
+  }
+  up.onclick = ()=>move(-80); down.onclick = ()=>move(80); reset.onclick = ()=>{offset=0;position();live.textContent='Game position reset to the top.';down.focus({preventScroll:true});};
+  position();
+}
