@@ -530,9 +530,9 @@ function drawBoard(g) {
   const c = $("board"),
     x = c.getContext("2d"),
     cell = c.width / g.size;
-  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#10251a");
+  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#0c241b");
   x.fillRect(0, 0, 600, 600);
-  x.strokeStyle = document.body.classList.contains("midnight") ? "#293a2c" : (document.body.classList.contains("light") ? "#203C28" : "#2c4838");
+  x.strokeStyle = document.body.classList.contains("midnight") ? "#293a2c" : (document.body.classList.contains("light") ? "#203C28" : "#244a37");
   x.lineWidth = 1;
   for (let i = 0; i <= g.size; i++) {
     x.beginPath();
@@ -543,7 +543,7 @@ function drawBoard(g) {
     x.stroke();
   }
   g.body.forEach(([a, b], i) => {
-    x.fillStyle = document.body.classList.contains("midnight") ? (i ? "#94b978" : "#AFD58B") : (document.body.classList.contains("light") ? "#83D34E" : (i ? "#98CC77" : "#D3F49D"));
+    x.fillStyle = document.body.classList.contains("midnight") ? (i ? "#94b978" : "#AFD58B") : (document.body.classList.contains("light") ? "#83D34E" : (i ? "#86c79b" : "#b7e8bc"));
     x.beginPath();
     x.roundRect(a * cell + cell * 0.2, b * cell + cell * 0.2, cell * 0.6, cell * 0.6, 2);
     x.fill();
@@ -573,7 +573,7 @@ function drawBoard(g) {
       [-1, 0],
       [0, -1],
     ][g.direction];
-  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#10251a");
+  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#0c241b");
   for (const sign of [-1, 1]) {
     x.beginPath();
     x.arc(
