@@ -176,7 +176,11 @@ for (let i = 0; i < fields.length; i++) {
 }
 function setControls(settings) {
   for (const [key, , , options] of fields) {
-    $(key).value = settings[key];
+    const control = $(key);
+    if (control.tagName === "SELECT" && !Array.from(control.options).some(option => option.value === String(settings[key]))) {
+      control.add(new Option(String(settings[key]), String(settings[key])));
+    }
+    control.value = settings[key];
     $(key + "-value").textContent = Array.isArray(options) ? "" : settings[key];
   }
 }
@@ -275,7 +279,10 @@ $("load").onchange = async () => {
     if (!file) return;
     if (file.size > 2_000_000)
       throw Error("Choose a brain file smaller than 2 MB");
-    send("load", { brain: JSON.parse(await file.text()) });
+    let brain;
+    try { brain = JSON.parse(await file.text()); }
+    catch { throw Error("This file is not valid JSON. Choose a saved Snake Lab brain file."); }
+    send("load", { brain });
   } catch (e) {
     message(e.message);
   } finally {
@@ -358,6 +365,7 @@ worker.onmessage = ({ data }) => {
     lastEvaluation = null;
     setControls(data.settings);
     $("evaluation").textContent = "";
+    message("Brain loaded. Press Start watching, or return to training.");
     return;
   }
   if (data.type === "evaluation") {
@@ -376,27 +384,10 @@ worker.onmessage = ({ data }) => {
     return;
   }
   if (data.type === "export") {
-    download(
-      "snake-lab-brain.json",
-      JSON.stringify(data.brain, null, 2),
-      "application/json",
-    );
-    download(
-      "snake-lab-experiment.json",
-      JSON.stringify(
-        {
-          settings: data.brain.settings,
-          training: data.brain.training,
-          history: data.history,
-          evaluation: lastEvaluation,
-          explanation: lastExplanation,
-        },
-        null,
-        2,
-      ),
-      "application/json",
-    );
-    message("Brain and experiment report downloaded.");
+    download("snake-lab-brain.json", JSON.stringify({ ...data.brain,
+      experiment: { history: data.history, evaluation: lastEvaluation, explanation: lastExplanation }
+    }, null, 2), "application/json");
+    message("Brain and experiment diary saved together in one file.");
     return;
   }
   if (data.type === "state") {

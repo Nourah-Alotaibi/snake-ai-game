@@ -94,6 +94,7 @@ onmessage = ({ data }) => {
   } catch (e) {
     running = false;
     postMessage({ type: "error", message: e.message });
+    emit();
   }
 };
 setInterval(() => {
