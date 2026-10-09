@@ -30,6 +30,8 @@ SHAP updates automatically while playing (at most twice per second). Pause to st
 - Settings and live network on the left, game in the center, live SHAP and move scores on the right.
 - A question-mark tutorial, parameter help, and one optional “Go deeper” area for progress, testing, saving and references.
 - A labeled **inputs → hidden layers → outputs** diagram with real activations and an expanded live view. Displayed connections show structure, not learned weight strengths; hidden layers display up to eight neurons each.
+- **Live Calculation**: select any input, hidden neuron or output to inspect actual inputs, learned weights, bias, weighted sum and activation. The expandable table includes every incoming connection, including neurons outside the diagram sample.
+- **Pause & Inspect** freezes training on one board; **Next board** advances one move and **Resume live view** restores the previous running state. **Network spacing** adjusts the diagram without changing its architecture. The current-board network preference is shown separately from the previous move; exploration can choose a different action.
 - Mobile uses a large board first, stacked panels and larger touch controls. Desktop main panels fit common laptop/monitor viewports; expanded details may need scrolling.
 
 ![Expanded neural network with three output scores](web/screenshots/snake-network.png)

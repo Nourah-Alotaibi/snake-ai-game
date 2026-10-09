@@ -918,3 +918,31 @@ body:not(.light):not(.midnight) .shap-bar.negative { background:#729e91; }
 
 .network-guide { padding-left:20px; margin:10px 0 0; font-size:13px; line-height:1.6; color:var(--muted); }
 .network-guide li { margin:8px 0; }
+/* Live neuron inspection follows the active theme. */
+.network:has(.interactive-network) { overflow-x:auto; padding:12px 6px; }
+.network .interactive-network, #network-large .interactive-network { height:auto; max-height:none; max-width:none; min-width:100%; }
+.calculation { margin-top:14px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--bg); font-size:13px; line-height:1.6; }
+.calculation h3 { margin:14px 0 6px; }
+.inspection-controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.inspection-controls label { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.inspection-controls button { min-height:40px; }
+.neuron-picker-label { display:grid; gap:6px; }
+.neuron-picker { max-width:100%; min-height:40px; }
+.neuron-summary { margin-top:12px; }
+.neuron-summary ol { padding-left:23px; margin:8px 0; }
+.math-table-wrap { overflow-x:auto; }
+.math-table-wrap table { border-collapse:collapse; width:100%; min-width:420px; font-variant-numeric:tabular-nums; }
+.math-table-wrap td,.math-table-wrap th { padding:7px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+.math-equation { overflow-wrap:anywhere; }
+.interactive-network .network-node { cursor:pointer; stroke-width:2; }
+.interactive-network .network-node:hover,.interactive-network .network-node:focus-visible,.interactive-network .selected-node { opacity:1; stroke:var(--ink); stroke-width:3; outline:none; }
+.interactive-network .preferred-node { stroke:var(--ink); }
+body .interactive-network .network-links .selected-link { opacity:.65; stroke-width:1.5; }
+.calculation :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+@media (max-width:600px) { .calculation { font-size:14px; } }
+
+.interactive-network .forward-active { animation: forward-reveal 220ms ease-out both; }
+@keyframes forward-reveal { from { stroke-dasharray: 4 4; stroke-dashoffset: 8; } to { stroke-dasharray: 4 4; stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .interactive-network .forward-active { animation: none; } }
+
+.inspect-spacing { accent-color: var(--accent); }

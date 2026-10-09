@@ -257,6 +257,15 @@ export class Network {
     }
     return activations;
   }
+  inspect(input) {
+    const activations = this.forward(input).map(a => Array.from(a));
+    const sums = this.layers.map((layer, l) => Array.from(layer.b, (bias, j) => {
+      let sum = bias;
+      for (let i = 0; i < layer.input; i++) sum += layer.w[j * layer.input + i] * activations[l][i];
+      return sum;
+    }));
+    return { activations, sums, weights: this.weights(), preferred: argmax(activations.at(-1)) };
+  }
   predict(input) {
     return this.forward(input).at(-1);
   }
@@ -458,10 +467,11 @@ export class Learner {
     return experience;
   }
   snapshot() {
-    const recent = this.history.slice(-20);
+    const recent = this.history.slice(-20), inspection = this.net.inspect(this.game.state());
     return {
       game: this.game.snapshot(),
-      networkActivations: this.net.forward(this.game.state()).map(a => Array.from(a)),
+      networkActivations: inspection.activations,
+      inspection,
       settings: this.settings,
       steps: this.steps,
       episodes: this.episodes,
