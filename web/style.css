@@ -873,3 +873,17 @@ body:not(.light):not(.midnight) .network-links line { opacity:.18; }
 .deep-learning .explain-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; width:100%; max-width:none; margin:12px 0 0; }
 .deep-learning .explain-grid .panel { width:100%; margin:0; padding:14px 16px; }
 .deep-learning .results-row #chart { height:auto; max-height:130px; aspect-ratio:5; }
+
+/* Optional content uses readable type and a frame that fits its contents. */
+.deep-learning { max-width:1040px; justify-self:center; padding:16px; }
+.deep-learning .results-row,.deep-learning .background-notes { max-width:none; }
+.deep-learning > summary { font-size:15px; }
+.deep-learning .panel { padding:16px 18px; }
+.deep-learning .panel p,.deep-learning .background-notes p { font-size:14px; line-height:1.6; margin:8px 0; }
+.deep-learning .small,.deep-learning .results-row .small,.deep-learning .mini-stats { font-size:12px; line-height:1.5; }
+.deep-learning .panel h2 { font-size:20px; margin:10px 0; }
+.deep-learning .eyebrow { font-size:11px; }
+.deep-learning .results-row summary,.deep-learning .background-notes > summary { font-size:14px; padding:6px 0; }
+.deep-learning button,.deep-learning .file-button { font-size:13px; min-height:42px; }
+.deep-learning .background-notes .explain-grid { margin-top:8px; }
+@media(max-width:600px) { .deep-learning { padding:12px; } .deep-learning .panel,.deep-learning .explain-grid .panel { padding:12px; } }

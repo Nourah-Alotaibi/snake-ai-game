@@ -174,7 +174,7 @@
               aria-label="Training apples per game and rolling 20-game mean"
             ></canvas>
             <p class="small">
-              Dim line: apples each game. Green line: rolling mean.
+              Dim line: apples collected each game. Green line: average over the last 20 games.
             </p>
             <details><summary>Training statistics</summary><div class="mini-stats">
               <span>Updates <b id="updates">0</b></span
@@ -184,15 +184,14 @@
             </div></details>
           </div>
           <details class="panel test-details"><summary>Test the brain & save your experiment</summary>
-            <h2>Better than wandering?</h2>
+            <h2>Test what it learned</h2>
             <p>
-              Freeze the brain and compare it with a random player on the same
-              20 starting seeds. No training happens during the check.
+              Run 20 games with learning paused, then compare the snake with a random player from the same starting positions.
             </p>
             <button id="evaluate">Run 20 test games</button>
             <div id="evaluation" aria-live="polite"></div>
             <p class="small">
-              Compare the same starting positions for a repeatable check.
+              Use this check to compare your experiments fairly.
             </p>
             <div class="buttons">
               <button id="save">Save brain & diary</button
@@ -205,26 +204,19 @@
               />
             </div>
             <p class="small">
-              Saved brains keep weights and settings; replay memory and
-              optimizer history start fresh when loaded.
+              Save the model and its settings to a file, or load a saved model. Its training memory starts fresh when loaded.
             </p>
           </details>
         </div>
       <details class="background-notes"><summary>How the experiment works · references</summary><section class="explain-grid">
         <article class="panel">
           <p class="eyebrow">What-if replay</p>
-          <h2>What about the turn it didn’t take?</h2>
+          <h2>Learn from the other two moves</h2>
           <p>
-            With <strong>“what if?” replay</strong>, each real move also creates
-            two one-step branches in a copy of the game. The outcomes of those
-            unchosen moves join replay memory, while the real board stays
-            untouched.
+            With <strong>“what if?” replay</strong>, the snake also tries the two moves it did not choose in a copy of the game. These one-step results become extra training examples; the real board stays unchanged.
           </p>
           <p>
-            This is a model-based extension to Double DQN, inspired by
-            Dyna-style planning. It uses known game rules and extra simulator
-            queries—not magic foresight. Turn it off to compare with standard
-            replay.
+            This adds simulator-based planning to Double DQN, inspired by Dyna. Turn it off to compare learning from actual moves alone.
           </p>
           <a
             href="https://github.com/Nourah-Alotaibi/snake-ai-game/blob/main/REPORT.md"
