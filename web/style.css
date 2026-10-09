@@ -946,3 +946,13 @@ body .interactive-network .network-links .selected-link { opacity:.65; stroke-wi
 @media (prefers-reduced-motion: reduce) { .interactive-network .forward-active { animation: none; } }
 
 .inspect-spacing { accent-color: var(--accent); }
+
+/* Explicit panel ordering controls stay readable in every theme and on phones. */
+.panel-move-controls { display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--line); }
+.panel-move-controls > span { color:var(--muted); font-size:12px; margin-right:auto; }
+.controls-column .panel-move-controls button,.play-column .panel-move-controls button { min-height:40px; padding:8px 12px; font-size:13px; font-weight:650; color:var(--ink); background:var(--soft); border:1px solid var(--line); }
+.panel-move-controls button:hover:not(:disabled) { border-color:var(--accent); }
+.panel-move-controls button:disabled { opacity:.45; cursor:default; }
+.panel-move-controls button:focus-visible,.panel-order-reset:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.panel-order-reset { margin:0 0 12px; font-size:12px; min-height:36px; }
+@media(max-width:600px) { .controls-column .panel-move-controls button,.play-column .panel-move-controls button { min-height:44px; font-size:14px; } }
