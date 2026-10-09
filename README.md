@@ -14,21 +14,38 @@ The lab uses Double DQN with an optional **“what if?” replay** extension. Be
 
 The contribution goes beyond presentation: an isolated simulator branch, real-versus-simulated experience tracking, and a controlled ablation with equal actual-game steps and optimizer updates. Extra simulation is disclosed rather than treated as free experience.
 
-Across three training seeds and 50 evaluation games per trained model, the final mean was **20.07 apples/game for standard replay and 20.97 for what-if replay**. The extension won only one of the three seed comparisons and performed worse early on two seeds. That is a mixed result, not proof that it is better. [See every run, its budget and limitations](REPORT.md).
+In the original **12 × 12 board experiment** (before the October 9 interface and 24 × 24 world update), across three training seeds and 50 evaluation games per trained model, the final mean was **20.07 apples/game for standard replay and 20.97 for what-if replay**. The extension won only one of the three seed comparisons and performed worse early on two seeds. That is a mixed result, not proof that it is better. [See every run, its budget and limitations](REPORT.md).
 
 ## Why did it turn? Ask SHAP.
 
-Click **Explain this board** to pause and see which danger, heading and food signals support the brain’s preferred move over its runner-up. The lab calculates exact baseline Shapley values across all 2,048 sensor combinations, shows a signed contribution chart and a plain-language takeaway, and includes the explanation in your exported diary. No extra package or paid API is needed.
+SHAP updates automatically while playing (at most twice per second). Pause to study which danger, heading and food signals support the brain’s preferred move over its runner-up. The lab calculates exact baseline Shapley values across all 2,048 sensor combinations, shows a signed contribution chart and a plain-language takeaway, and includes the explanation in your exported diary. No extra package or paid API is needed.
 
-## Four views inside the lab
+## Current interface · October 9, 2026
 
-| A familiar game, a new question | Watch learning happen |
-| --- | --- |
-| ![Nokia memory and the live learning lab](web/screenshots/01-nokia-meets-neural.png) | ![Snake training with real scores and controls](web/screenshots/02-learning-in-action.png) |
-| **Peek at the brain** | **Give it a report card** |
-| ![Exact SHAP contributions explaining the neural network’s preferred move](web/screenshots/03-inside-the-brain.png) | ![Frozen policy evaluated against random moves](web/screenshots/04-the-report-card.png) |
+![Current Snake Learning Lab: settings, a green snake, live network and SHAP](web/screenshots/snake-learning-lab.png)
 
-These are screenshots of the running application, not mockups. The on-screen 20-game report card uses different seeds from the report’s final 50-game comparison.
+- A 24 × 24 world, green Nokia-inspired snake and red apple.
+- Charcoal surfaces with readable light text; light mode is also available.
+- Slow playback from 1 move/second, defaulting to 2. Faster training and single-step inspection remain available.
+- Settings and live network on the left, game in the center, live SHAP and move scores on the right.
+- A question-mark tutorial, parameter help, and one optional “Go deeper” area for progress, testing, saving and references.
+- A labeled **inputs → hidden layers → outputs** diagram with real activations and an expanded live view. Displayed connections show structure, not learned weight strengths; hidden layers display up to eight neurons each.
+- Mobile uses a large board first, stacked panels and larger touch controls. Desktop main panels fit common laptop/monitor viewports; expanded details may need scrolling.
+
+![Expanded neural network with three output scores](web/screenshots/snake-network.png)
+
+![Live SHAP attributions and move scores](web/screenshots/snake-xai.png)
+
+These are current application screenshots, not mockups. The included checkpoint learned on the old 12 × 12 world; its performance on the current board must be tested again. Historical ablation scores in REPORT.md are **not** scores for this revision.
+
+## A first experiment
+
+1. Press **Start learning** to begin from scratch, or **Load example snake** to load the built-in checkpoint—no upload required.
+2. Use slow playback or **Single move**, predict the next move, and compare with the live explanation.
+3. Change one parameter, then **Apply & reset brain**. This clears learning and progress; save first if needed.
+4. Open **Go deeper** to compare the frozen policy with random moves on 20 matched seeds, or save/load your experiment.
+
+[Read the project story](https://www.nora-alotaibi.com/blog/snake-learning-lab)
 
 ## Turn the knobs and ask better questions
 
@@ -59,7 +76,7 @@ node --test tests/*.test.mjs
 node scripts/ablation.mjs
 ```
 
-Node 20+ runs the tests and reproduces the ablation. Seventeen core tests passed, including numerical gradient checks, optimizer learning, game rules, seeded reproducibility, target-network isolation, frozen evaluation, parameter effects and counterfactual simulation. [Browser checks](results/browser-checks.json) cover real weight updates, mode switching, evaluation, save/load, controls and mobile layout.
+Node 20+ runs the tests. The ablation script now uses the current 24 × 24 world; to reproduce the historical 12 × 12 results, use the earlier repository revision linked in REPORT.md. The automated tests cover numerical gradient checks, optimizer learning, game rules, seeded reproducibility, target-network isolation, frozen evaluation, parameter effects and counterfactual simulation. [Browser checks](results/browser-checks.json) cover real weight updates, mode switching, evaluation, save/load, controls and mobile layout.
 
 ## Where the story began
 

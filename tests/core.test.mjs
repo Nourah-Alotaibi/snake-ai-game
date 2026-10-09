@@ -20,7 +20,7 @@ test("seeded worlds and training are reproducible", () => {
 });
 test("food rewards, growth and no food on body", () => {
   const g = new Snake();
-  g.food = [7, 6];
+  g.food = [13, 12];
   const length = g.body.length;
   const e = g.step(0);
   assert.equal(e.reward, 10);
@@ -31,9 +31,9 @@ test("food rewards, growth and no food on body", () => {
 test("wall, self, vacating tail and board completion", () => {
   const g = new Snake();
   g.body = [
-    [11, 5],
-    [10, 5],
-    [9, 5],
+    [23, 5],
+    [22, 5],
+    [21, 5],
   ];
   assert.equal(g.state()[0], 1);
   assert.equal(g.step(0).reason, "wall");
@@ -59,9 +59,9 @@ test("wall, self, vacating tail and board completion", () => {
   g.food = [8, 8];
   assert.equal(g.step(0).done, false);
   const full = new Snake();
-  full.body = Array.from({ length: 144 }, (_, i) => [
-    i % 12,
-    Math.floor(i / 12),
+  full.body = Array.from({ length: full.size * full.size }, (_, i) => [
+    i % full.size,
+    Math.floor(i / full.size),
   ]);
   assert.equal(full.placeFood(), null);
 });
@@ -142,7 +142,7 @@ test("memory is bounded and epsilon retains progress across games", () => {
 });
 test("counterfactual fork leaves the real world and RNG untouched", () => {
   const g = new Snake();
-  g.food = [7, 6];
+  g.food = [13, 12];
   const before = JSON.stringify(g);
   const imagined = g.fork().step(0);
   assert.equal(JSON.stringify(g), before);
@@ -177,13 +177,13 @@ test("architecture, reward and exploration controls have real effects", () => {
     deathPenalty: 4,
     guidance: 0.5,
   });
-  game.food = [8, 6];
+  game.food = [14, 12];
   assert.equal(game.step(0).reward, 0.49);
   assert.equal(game.step(0).reward, 15);
   game.body = [
-    [11, 6],
-    [10, 6],
-    [9, 6],
+    [23, 12],
+    [22, 12],
+    [21, 12],
   ];
   assert.equal(game.step(0).reward, -4);
 });
@@ -195,3 +195,4 @@ test("learning rate changes actual weight updates", () => {
   b.train(examples, 0.01);
   assert.notDeepEqual(a.weights(), b.weights());
 });
+

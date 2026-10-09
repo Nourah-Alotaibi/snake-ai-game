@@ -4,17 +4,28 @@ let learner = new Learner(),
   watcher = null,
   mode = "train",
   running = false,
-  speed = 120,
+  speed = 2,
   last = performance.now(),
   carry = 0,
   lastPost = 0;
 const active = () =>
   mode === "watch" ? (watcher ??= Learner.from(learner.export())) : learner;
+let lastExplainKey = "", lastExplainTime = 0;
 function emit() {
-  postMessage({ type: "state", ...active().snapshot(), running, mode });
+  const current = active();
+  postMessage({ type: "state", ...current.snapshot(), running, mode });
+  const key = mode + ":" + current.steps + ":" + current.game.steps;
+  const now = performance.now();
+  if (!current.game.done && key !== lastExplainKey && (!running || now - lastExplainTime >= 500)) {
+    lastExplainKey = key;
+    lastExplainTime = now;
+    postMessage({ type: "explanation", automatic: true, ...explainMove(current.net, current.game.state()) });
+  }
+  if (current.game.done) postMessage({type: "explanation-ended"});
 }
 onmessage = ({ data }) => {
   try {
+    if (["configure", "load", "mode"].includes(data.type)) lastExplainKey = "";
     switch (data.type) {
       case "configure":
         learner = new Learner(data.settings);
@@ -33,7 +44,7 @@ onmessage = ({ data }) => {
         watcher = null;
         break;
       case "speed":
-        speed = Math.max(1, Math.min(2000, Number(data.value) || 10));
+        speed = Math.max(1, Math.min(2000, Number(data.value) || 2));
         break;
       case "step":
         running = false;

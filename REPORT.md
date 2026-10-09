@@ -2,6 +2,8 @@
 
 **A technical project report · October 8, 2026**
 
+> Version note, October 9: the results below belong to the original 12 × 12 environment. The current browser lab uses 24 × 24 cells and live automatic SHAP. Do not present these scores as measurements of the current world. Reproduce the historical environment from [the pre-redesign source revision](https://github.com/Nourah-Alotaibi/snake-ai-game/tree/e291e964dd30c84f9ac8fc21f66d27ffa03fdac1).
+
 What’s the best way to learn something new? Gamify it! Snake was the first digital game I played on my mum’s old Nokia. I built an early version when I first started studying AI, to connect unfamiliar concepts with something familiar. It helped the ideas click and helped me ace my exams. This revision asks a more technical question: can alternative-action experience help the learner?
 
 ## My contribution

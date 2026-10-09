@@ -83,14 +83,14 @@ export class Snake {
   constructor(seed = 42, settings = DEFAULTS) {
     this.rng = new RNG(seed);
     this.settings = config(settings);
-    this.size = 12;
+    this.size = 24;
     this.reset();
   }
   reset() {
     this.body = [
-      [6, 6],
-      [5, 6],
-      [4, 6],
+      [12, 12],
+      [11, 12],
+      [10, 12],
     ];
     this.direction = 0;
     this.score = 0;
@@ -461,6 +461,7 @@ export class Learner {
     const recent = this.history.slice(-20);
     return {
       game: this.game.snapshot(),
+      networkActivations: this.net.forward(this.game.state()).map(a => Array.from(a)),
       settings: this.settings,
       steps: this.steps,
       episodes: this.episodes,

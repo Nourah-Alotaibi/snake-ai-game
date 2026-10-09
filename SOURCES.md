@@ -22,3 +22,16 @@ The contribution claim is bounded: this project adds a controlled, simulator-ass
 - [Lundberg & Lee, A Unified Approach to Interpreting Model Predictions](https://arxiv.org/abs/1705.07874): SHAP framework.
 
 The lab independently implements the standard Shapley formula in JavaScript for a single zero reference. It does not bundle or claim authorship of SHAP. Its contribution here is a reproducible, contrastive explanation of Snake action scores alongside the learning experiment.
+
+
+## Current interface, visualization and accessibility · October 9, 2026
+
+- [WCAG contrast guidance](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum): normal text should reach at least 4.5:1 contrast; large text at least 3:1. The new palette uses neutral dark surfaces and light text, retaining green for the game and highlights.
+- [Material Design color roles](https://m3.material.io/styles/color/the-color-system): distinguishing surfaces from their foreground content informed the charcoal panel palette. No Material library or assets are bundled.
+- [MDN SVG tutorial](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial): SVG is the browser standard used for the independently written network diagram.
+
+The diagram uses actual current-board network activations, labels input/hidden/output layers and shows three action scores. Its lines illustrate connectivity, not learned weight magnitude; hidden layers display up to eight neurons. The enlarged dialog displays the same live model.
+
+Automatic SHAP uses the same exact attribution calculation described above, refreshed at most twice per second during play without pausing learning. It describes a sampled board, not a causal guarantee or an explanation of random exploration. The all-zero reference and potentially invalid masked states remain limitations.
+
+The current 24 × 24 grid differs from the original 12 × 12 experiment. The checkpoint and historical results remain credited to that earlier environment. The interface redesign is an educational presentation improvement, not evidence of a new algorithm or better performance.

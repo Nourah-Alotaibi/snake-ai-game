@@ -1,13 +1,13 @@
 :root {
   color-scheme: dark;
-  --bg: #0d1b2a;
-  --panel: #14273d;
-  --soft: #1c354e;
-  --ink: #e6f1fb;
-  --muted: #b0c4d8;
-  --accent: #9dd6ff;
-  --line: #314963;
-  --gold: #efcb88;
+  --bg: #0d1b13;
+  --panel: #14271c;
+  --soft: #20382a;
+  --ink: #e5eee0;
+  --muted: #a9bca9;
+  --accent: #a7d785;
+  --line: #304b38;
+  --gold: #d3dfa1;
 }
 * {
   box-sizing: border-box;
@@ -27,7 +27,7 @@ body.light {
   --soft: #e8eddc;
   --ink: #2c4035;
   --muted: #5c6d5f;
-  --accent: #82486c;
+  --accent: #386c3b;
   --line: #d6decd;
   --gold: #947032;
 }
@@ -186,7 +186,7 @@ canvas {
   display: block;
 }
 #board {
-  background: #081722;
+  background: #102719;
   border: 1px solid var(--line);
   border-radius: 15px;
   aspect-ratio: 1;
@@ -493,12 +493,303 @@ footer {
 .shap-bar {
   display: block;
   height: 100%;
-  background: #91c8ed;
+  background: #a7d785;
 }
 .shap-bar.negative {
-  background: #dbb777;
+  background: #6f9469;
 }
 .shap-row > span:last-child {
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+/* Compact, board-first learning layout. */
+header, main { max-width: 1040px; }
+.intro { display: block; text-align: center; padding: 22px 0 18px; }
+.intro h1 { font: 500 clamp(28px, 4vw, 40px)/1.2 system-ui, sans-serif; letter-spacing: -.03em; margin: 8px 0; }
+.intro p { margin: 8px auto; max-width: 570px; }
+.workspace { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; }
+.workspace > .board-panel { grid-column: 1 / -1; width: min(100%, 470px); margin: 0 auto; padding: 18px; }
+#board { width: min(100%, 340px); margin: auto; border-radius: 4px; image-rendering: pixelated; }
+.play-column { grid-column: 2; grid-row: 2; }
+.controls-column { grid-column: 1; grid-row: 2; }
+.panel { padding: 20px; border-radius: 12px; margin-bottom: 18px; }
+h2 { font: 600 21px/1.3 system-ui, sans-serif; }
+.score-strip { padding: 10px 0; text-align: center; }
+.score-strip strong { font: 600 24px/1.3 system-ui,sans-serif; }
+.decision { margin: 6px 0 12px; }
+.board-panel .buttons { justify-content: center; }
+.board-panel > .small { margin-bottom: 0; }
+.control { position: relative; }
+.control label { align-items: center; flex-wrap: wrap; justify-content: flex-start; }
+.control output { margin-left: auto; }
+.help-button { min-height: 24px; width: 24px; height: 24px; padding: 0; font-size: 13px; flex-shrink: 0; }
+.parameter-help { display: none; padding: 10px; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; }
+.control:has(.help-button:hover) .parameter-help, .control:has(.help-button:focus-visible) .parameter-help, .control.help-open .parameter-help { display: block; }
+.background-notes { margin-top: 10px; }
+@media(max-width:680px) {
+  .workspace { grid-template-columns: minmax(0,1fr); }
+  .play-column, .controls-column { grid-column: 1; grid-row: auto; }
+  .controls-column { order: 1; } .play-column { order: 2; }
+  .control-grid { gap: 16px 12px; }
+  header, main { padding: 16px; }
+  nav { flex-wrap: wrap; }
+}
+
+/* Use the space around the board for the experiment controls. */
+header, main { max-width: 1560px; }
+.workspace { grid-template-columns: minmax(0,1fr) 410px minmax(0,1fr); align-items: start; gap: 24px; }
+.workspace > .board-panel { grid-column: 2; grid-row: 1; width: 100%; }
+.controls-column { grid-column: 1; grid-row: 1; }
+.play-column { grid-column: 3; grid-row: 1; }
+.results-row { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 24px; }
+.results-row .panel { margin-bottom: 0; }
+.control-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+@media(max-width:1100px) {
+  .workspace { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+  .workspace > .board-panel { grid-column: 1 / -1; grid-row: 1; width: min(100%,410px); }
+  .controls-column { grid-column: 1; grid-row: 2; }
+  .play-column { grid-column: 2; grid-row: 2; }
+}
+@media(max-width:680px) {
+  .workspace, .results-row { grid-template-columns: minmax(0,1fr); }
+  .workspace > .board-panel, .controls-column, .play-column, .results-row { grid-column: 1; grid-row: auto; order: 0; }
+  .workspace > .board-panel { grid-row: 1; }
+  .results-row { gap: 18px; }
+}
+
+/* Compact controls, with room to read and operate each input. */
+.controls-column .panel, .play-column .panel, .results-row .panel { padding: 14px 16px; border-radius: 10px; }
+.controls-column .panel-heading, .play-column .panel-heading, .results-row .panel-heading { margin-bottom: 10px; }
+.controls-column p, .play-column p, .results-row p { margin-block: 8px; }
+.controls-column h2, .play-column h2, .results-row h2 { font-size: 18px; margin: 8px 0; }
+.control-grid { gap: 12px; margin: 14px 0; }
+.preset-buttons { gap: 6px; margin-bottom: 12px; }
+.preset-buttons button { padding: 6px 10px; min-height: 34px; }
+.control input[type="range"] { margin-top: 8px; }
+.control label { font-size: 11px; gap: 5px; }
+.control select, .control input[type="number"] { font-size: 12px; padding: 6px; }
+.q-row { margin: 9px 0; }
+.results-row #chart { max-height: 130px; }
+
+#board { width: min(100%, 280px); }
+.results-row { align-items: start; }
+@media(min-width:1101px) { .workspace { grid-template-columns: minmax(0,1fr) 370px minmax(0,1fr); } }
+
+/* A short lesson and progressive detail keep the learning surface calm. */
+header, main { max-width: 1300px; }
+.workspace { gap: 18px; }
+.lesson-steps { padding-left: 20px; color: var(--muted); font-size: 13px; line-height: 1.6; margin: 12px 0; }
+.lesson-steps li { padding-left: 3px; margin: 8px 0; }
+.lesson-steps strong { color: var(--ink); }
+.start-panel h2 { font-size: 18px; }
+.control label { font-size: 12px; }
+.controls-column p, .play-column p { font-size: 13px; }
+.controls-column .small, .play-column .small { font-size: 11px; }
+.results-row { gap: 12px; grid-template-columns: 1fr; max-width: 920px; width: 100%; justify-self: center; }
+.results-row #chart { max-height: 95px; }
+.test-details > summary, .score-details > summary { padding: 0; font-size: 13px; }
+.test-details[open] > summary, .score-details[open] > summary { margin-bottom: 14px; }
+.background-notes { max-width: 920px; margin: 12px auto; font-size: 13px; }
+.background-notes .explain-grid { gap: 12px; }
+.background-notes .panel { padding: 14px 16px; }
+.background-notes h2 { font-size: 17px; }
+.background-notes p { font-size: 12px; }
+.shap-row { font-size: 11px; grid-template-columns: minmax(100px,1fr) minmax(30px,1fr) 46px; gap: 6px; }
+@media(min-width:1101px) { .workspace { grid-template-columns: minmax(0,1fr) 350px minmax(0,1fr); } }
+@media(max-width:680px) {
+  .controls-column { grid-row: 1; }
+  .workspace > .board-panel { grid-row: 2; }
+  .play-column { grid-row: 3; }
+  .results-row { grid-row: 4; }
+}
+
+#board { width: min(100%, 180px); }
+
+#board { width: min(100%, 420px); }
+@media(min-width:1101px) { .workspace { grid-template-columns: minmax(0,1fr) 460px minmax(0,1fr); } }
+
+#tutorial-dialog { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; width: min(500px, calc(100% - 32px)); padding: 18px; }
+#tutorial-dialog::backdrop { background: #0009; }
+#tutorial-dialog .start-panel { border: 0; padding: 0; margin: 12px 0 0; }
+#tutorial-close { display: block; margin-left: auto; }
+.play-column h2 { font-size: 17px; }
+.play-column p { font-size: 12px; line-height: 1.5; }
+.shap-calculation { display: none; }
+.play-column .score-details { padding: 14px 16px; }
+[hidden] { display: none !important; }
+
+.results-row #chart { height: auto; max-height: none; aspect-ratio: 4; }
+
+.network { display: block; padding: 8px 0; }
+.network svg { display: block; width: 100%; height: auto; }
+.network-label { fill: var(--ink); font: 600 11px system-ui; }
+.network-count { fill: var(--muted); font: 9px system-ui; }
+.network-node { fill: var(--accent); stroke: var(--accent); }
+.network-flow { stroke: var(--accent); stroke-width: 1.5; opacity: .6; }
+.network-output-key { margin: 4px 0 !important; }
+
+.network { margin-top: 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px 8px; }
+.network svg { overflow: visible; }
+.network-links line { stroke: var(--accent); stroke-width: .65; opacity: .1; }
+.network-node { stroke-width: 1.3; }
+.network-label { font-size: 12px; }
+.network-count { font-size: 10px; }
+.network-action { fill: var(--ink); font: 600 12px system-ui; }
+.network-score { fill: var(--accent); font: 11px system-ui; }
+.network-flow { opacity: .8; }
+.network-output-key { padding: 8px 6px 0; font-size: 10px !important; }
+
+.controls-column .settings-panel { padding: 12px 14px; }
+.settings-panel .panel-heading { margin-bottom: 6px; }
+.settings-panel > p { margin: 4px 0 8px; font-size: 12px; }
+.settings-panel .wide { margin-top: 6px; padding: 7px 12px; min-height: 34px; }
+.settings-panel .control-grid { margin: 10px 0; gap: 10px 12px; }
+.settings-panel summary { padding-block: 6px; font-size: 12px; }
+.settings-panel #settings > .small { margin: 6px 0 0; font-size: 10px; }
+.settings-panel .control select { padding: 5px; }
+
+#board { width: min(100%, 350px); }
+@media(min-width:1101px) { .workspace { grid-template-columns: minmax(0,1fr) 390px minmax(0,1fr); } }
+.board-panel .score-strip { padding: 7px 0; }
+.board-panel .score-strip strong { font-size: 21px; }
+.board-panel .decision { padding: 8px 0; min-height: 0; font-size: 11px; }
+.board-panel .buttons { gap: 5px; }
+.board-panel .buttons button { min-height: 34px; padding: 6px 10px; }
+.board-panel .speed { margin-top: 10px; gap: 8px; }
+.board-panel > .small { font-size: 10px; margin-top: 6px; }
+.network-panel .network-output-key { display: none; }
+.network-notes summary { font-size: 11px; padding-block: 6px; }
+.network-panel { margin-bottom: 0; }
+
+@media (min-width: 1101px) and (min-height: 650px) {
+  body { font-size: 12px; }
+  header, main { max-width: 1500px; padding: 10px 22px; }
+  header { height: 48px; align-items: center; }
+  header > a { font-size: 21px; }
+  header button { min-height: 28px; padding: 4px 10px; }
+  main { padding-top: 0; }
+  .intro { padding: 8px 0; }
+  .intro h1 { font-size: 26px; margin: 3px 0; }
+  .intro p { margin: 3px auto; font-size: 11px; }
+  .intro .eyebrow { display: none; }
+  .workspace { grid-template-columns: minmax(0,1fr) 370px minmax(0,1fr); gap: 10px; }
+  .panel, .controls-column .panel, .play-column .panel, .results-row .panel { padding: 10px 12px; margin-bottom: 10px; }
+  .workspace > .board-panel { padding: 12px; }
+  #board { width: min(100%, 330px, calc(100dvh - 365px)); }
+  .panel-heading { margin-bottom: 8px; }
+  .eyebrow { font-size: 9px; }
+  .controls-column h2, .play-column h2 { font-size: 15px; margin: 6px 0; }
+  .controls-column p, .play-column p { font-size: 11px; margin-block: 5px; }
+  .control-grid { margin: 8px 0; gap: 7px 10px; }
+  .settings-panel summary { padding-block: 4px; }
+  .settings-panel .wide { min-height: 29px; padding: 4px 9px; }
+  .control label { font-size: 11px; }
+  .control input[type="range"] { margin-top: 4px; }
+  .settings-panel .control select { padding: 3px 5px; }
+  .help-button { width: 21px; height: 21px; min-height: 21px; }
+  .network { padding: 5px; margin-top: 4px; }
+  .network svg { height: clamp(140px, calc(100dvh - 590px), 205px); }
+  .network-panel .network-notes summary { padding: 3px 0; }
+  .shap-row { margin: 5px 0; font-size: 10px; }
+  .shap-title { font-size: 14px; }
+  .play-column summary { padding-block: 5px; font-size: 11px; }
+  .q-row { margin: 6px 0; font-size: 11px; }
+  .results-row { grid-template-columns: 1fr 1fr; max-width: none; gap: 10px; }
+  .results-row #chart { height: 48px; aspect-ratio: auto; }
+  .results-row .panel-heading { margin-bottom: 3px; }
+  .results-row .small { font-size: 10px; margin: 3px 0; }
+  .results-row summary { padding: 3px 0; font-size: 11px; }
+  .background-notes { margin: 3px auto; }
+  .background-notes > summary { padding: 3px 0; font-size: 10px; }
+  #status { padding: 5px 9px; margin: 4px 0 0; font-size: 10px; }
+}
+@media (min-width:1101px) and (min-height:650px) and (max-height:850px) {
+  header, main { zoom: .74; max-width: 1780px; }
+  .network svg { height: 140px; }
+}
+@media (min-width:1101px) and (min-height:851px) and (max-height:1000px) {
+  header, main { zoom: .85; max-width: 1650px; }
+}
+
+.deep-learning { grid-column: 1 / -1; width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; background: var(--panel); }
+.deep-learning > summary { font-size: 13px; font-weight: 600; padding: 0; }
+.deep-learning[open] > summary { margin-bottom: 14px; }
+#network-expand { padding: 5px 10px; min-height: 29px; font-size: 12px; margin-bottom: 5px; }
+#network-dialog { width: min(1000px, calc(100% - 32px)); max-height: 90dvh; overflow: auto; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+#network-dialog::backdrop { background: #000b; }
+#network-large svg { height: auto; max-height: 65dvh; }
+@media(min-width:1101px) and (min-height:650px) {
+  .controls-column .control label { font-size: 14px; }
+  .controls-column p, .play-column p { font-size: 13px; }
+  .controls-column h2, .play-column h2 { font-size: 18px; }
+  .play-column .shap-row { font-size: 12px; margin: 6px 0; }
+  .q-row { font-size: 13px; }
+  .controls-column summary, .play-column summary { font-size: 13px; }
+  .settings-panel .control select { font-size: 14px; }
+  .eyebrow { font-size: 11px; }
+  .network svg { height: 190px; }
+  .deep-learning > summary { font-size: 14px; }
+}
+
+.network-panel .network svg { width: 100%; height: auto; max-height: none; }
+.network-label { font-size: 15px; }
+.network-count { font-size: 12px; }
+.network-action { font-size: 15px; }
+.network-score { font-size: 13px; }
+.network-panel .network { padding: 4px; }
+
+/* Larger game and clearer type, with the same side-panel widths. */
+@media (min-width:1101px) and (min-height:650px) {
+  .workspace { grid-template-columns: minmax(0,1fr) 410px minmax(0,1fr); }
+  #board { width: min(100%, 370px, calc(100dvh - 330px)); }
+  .controls-column .control label { font-size: 16px; }
+  .controls-column p, .play-column p { font-size: 15px; line-height: 1.45; }
+  .controls-column h2, .play-column h2 { font-size: 21px; }
+  .play-column .shap-row { font-size: 14px; margin: 5px 0; }
+  .play-column .q-row { font-size: 15px; }
+  .controls-column summary, .play-column summary { font-size: 15px; }
+  .settings-panel .control select { font-size: 16px; }
+  .controls-column button { font-size: 14px; }
+  .controls-column .small, .play-column .small { font-size: 12px; }
+  .controls-column .eyebrow, .play-column .eyebrow { font-size: 12px; }
+  .settings-panel #settings > .small { font-size: 12px; }
+  .settings-panel .control-grid { gap: 8px 10px; }
+}
+@media (min-width:1101px) and (min-height:650px) {
+  header { height: 40px; }
+  .intro { padding: 3px 0; }
+  .network-panel h2 { margin: 3px 0; }
+}
+@media (min-width:1101px) and (min-height:650px) {
+  .workspace { grid-template-columns: minmax(0,1fr) 450px minmax(0,1fr); }
+  #board { width: min(100%, 410px, calc(100dvh - 300px)); }
+}
+
+:root { --bg: #17191c; --panel: #25282d; --soft: #30343a; --ink: #f4f5f6; --muted: #c5cbd2; --line: #555d67; --accent: #b2de91; --gold: #d3dfa1; }
+body.light { --bg: #f4f5f6; --panel: #ffffff; --soft: #e7eaed; --ink: #20252b; --muted: #46515d; --line: #89939e; --accent: #326226; --gold: #596331; }
+@media(max-width:680px) {
+  header, main { padding: 14px; }
+  header { gap: 12px; } nav { gap: 10px; }
+  .intro { padding: 12px 0; }
+  .intro h1 { font-size: 28px; }
+  .intro p { font-size: 14px; }
+  .workspace > .board-panel { grid-row: 1; width: 100%; padding: 14px; }
+  .controls-column { grid-row: 2; }
+  .play-column { grid-row: 3; }
+  .deep-learning { grid-row: 4; }
+  #board { width: 100%; }
+  .controls-column .panel, .play-column .panel { padding: 14px; }
+  .controls-column p, .play-column p { font-size: 14px; }
+  .controls-column .small, .play-column .small { font-size: 12px; }
+  .control label { font-size: 13px; }
+  .control select, .control input[type="number"] { font-size: 14px; min-height: 42px; }
+  button, .file-button { font-size: 13px; min-height: 44px; }
+  .help-button { width: 30px; height: 30px; min-height: 30px; }
+  .control input[type="range"] { min-height: 30px; }
+  .preset-buttons button, #network-expand { min-height: 44px; }
+  .shap-row { font-size: 12px; }
+  summary { font-size: 14px; padding-block: 12px; }
+  #network-dialog { padding: 14px; }
+  .network-panel .network svg { width: 100%; height: auto; }
 }

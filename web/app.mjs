@@ -155,6 +155,22 @@ for (let i = 0; i < fields.length; i++) {
   wrap.append(input);
   const hint = document.createElement("p");
   hint.textContent = help;
+  hint.id = key + "-help";
+  hint.className = "parameter-help";
+  hint.setAttribute("role", "tooltip");
+  const helpButton = document.createElement("button");
+  helpButton.type = "button";
+  helpButton.className = "help-button";
+  helpButton.textContent = "?";
+  helpButton.setAttribute("aria-label", "Explain " + label);
+  helpButton.setAttribute("aria-describedby", hint.id);
+  helpButton.setAttribute("aria-expanded", "false");
+  helpButton.onclick = () => {
+    const open = wrap.classList.toggle("help-open");
+    helpButton.setAttribute("aria-expanded", String(open));
+  };
+  title.append(helpButton);
+  input.setAttribute("aria-describedby", hint.id);
   wrap.append(hint);
   $(i < 4 ? "main-controls" : "advanced-controls").append(wrap);
 }
@@ -224,7 +240,7 @@ $("example").onclick = async () => {
     if (!response.ok) throw Error("Trained example unavailable");
     send("load", { brain: await response.json() });
     message(
-      "Loaded the saved what-if learner. Press Resume watching, or switch to training. See the report for its measured results.",
+      "Loaded the saved what-if learner. Press Start watching, or switch to training. See the report for its measured results.",
     );
   } catch (e) {
     message(e.message);
@@ -269,7 +285,18 @@ worker.onerror = (e) =>
     "The learning worker could not start. Serve this folder over HTTP and use a current browser. " +
       e.message,
   );
+$("network-expand").onclick = () => {
+  $("network-dialog").showModal();
+  if (latest) drawNetwork(latest);
+};
+$("network-close").onclick = () => $("network-dialog").close();
+$("tutorial-open").onclick = () => $("tutorial-dialog").showModal();
+$("tutorial-close").onclick = () => $("tutorial-dialog").close();
 worker.onmessage = ({ data }) => {
+  if (data.type === "explanation-ended") {
+    $("explanation").textContent = "Game ended. The next game will show a new explanation.";
+    return;
+  }
   if (data.type === "explanation") {
     lastExplanation = data;
     const panel = $("explanation");
@@ -308,8 +335,9 @@ worker.onmessage = ({ data }) => {
     const total = document.createElement("p");
     total.className = "small";
     total.textContent = `Reference gap ${data.baseline.toFixed(3)} + sensor contributions ${(data.output - data.baseline).toFixed(3)} = current Q-gap ${data.output.toFixed(3)}. ${data.evaluations.toLocaleString()} combinations checked.`;
+    total.className = "small shap-calculation";
     panel.append(total);
-    message(
+    if (!data.automatic) message(
       "SHAP explanation ready. Training is paused; this check changed no weights or replay memory.",
     );
     return;
@@ -399,7 +427,7 @@ function render(s) {
   $("run").textContent = s.running
     ? "Pause"
     : s.mode === "watch"
-      ? "Resume watching"
+      ? "Start watching"
       : "Start learning";
   $("watch").textContent =
     s.mode === "watch" ? "Return to training" : "Watch this brain";
@@ -428,23 +456,9 @@ function render(s) {
     row.append(label, track, number);
     $("q-values").append(row);
   });
-  $("architecture").textContent =
-    `11 inputs → ${Array(s.settings.depth).fill(s.settings.hidden).join(" → ")} hidden neurons → 3 action values. Dots show up to 12 actual activations per layer; brighter means more active. Curiosity now: ${(s.epsilon * 100).toFixed(1)}%.`;
-  if ($("network").closest("details").open) {
-    $("network").replaceChildren();
-    for (const layer of s.decision?.activations ?? []) {
-      const col = document.createElement("div");
-      col.className = "neuron-column";
-      const max = Math.max(1, ...layer.map(Math.abs));
-      for (const value of layer.slice(0, 12)) {
-        const dot = document.createElement("span");
-        dot.className = "neuron";
-        dot.style.opacity = 0.15 + 0.85 * Math.min(1, Math.abs(value) / max);
-        dot.title = value.toFixed(3);
-        col.append(dot);
-      }
-      $("network").append(col);
-    }
+  $("architecture").textContent = `11 sensor inputs → ${s.settings.depth} hidden ${s.settings.depth === 1 ? "layer" : "layers"} (${s.settings.hidden} neurons each) → 3 move scores. Hidden layers show up to 8 neurons; brighter dots mean stronger activation. Arrows show information flow, not learned connection strength.`;
+  if ($("network")) {
+    drawNetwork(s);
     $("sensors").replaceChildren();
     sensorNames.forEach((name, i) => {
       const el = document.createElement("span");
@@ -454,15 +468,74 @@ function render(s) {
     });
   }
 }
+function drawNetwork(s) {
+  const ns = "http://www.w3.org/2000/svg";
+  const create = (tag, attrs, text) => {
+    const el = document.createElementNS(ns, tag);
+    for (const [key, value] of Object.entries(attrs)) el.setAttribute(key, value);
+    if (text !== undefined) el.textContent = text;
+    return el;
+  };
+  const layers = s.networkActivations ?? s.decision?.activations ?? [];
+  const count = s.settings.depth + 2, width = 460, height = 200;
+  const svg = create("svg", {viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": `Neural network: 11 inputs, ${s.settings.depth} hidden layers of ${s.settings.hidden} neurons, and three move score outputs`});
+  svg.append(create("title", {}, "Sensors → hidden layers → move scores"));
+  const defs = create("defs", {}), marker = create("marker", {id: "network-arrow", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse"});
+  marker.append(create("path", {d: "M 0 0 L 10 5 L 0 10 z", fill: "var(--accent)"}));
+  defs.append(marker); svg.append(defs);
+  const spacing = 280 / (count - 1);
+  const links = create("g", {class: "network-links", "aria-hidden": "true"});
+  svg.append(links);
+  for (let l = 0; l < count - 1; l++) {
+    const x = 50 + l * spacing;
+    const fromCount = l === 0 ? 11 : Math.min(8, s.settings.hidden);
+    const toCount = l === count - 2 ? 3 : Math.min(8, s.settings.hidden);
+    for (let i = 0; i < fromCount; i++) {
+      for (let j = 0; j < toCount; j++) {
+        links.append(create("line", {x1: x + 6, y1: 55 + i * 110 / (fromCount - 1), x2: x + spacing - 6, y2: 55 + j * 110 / (toCount - 1)}));
+      }
+    }
+  }
+  for (let l = 0; l < count; l++) {
+    const x = 50 + l * spacing, values = layers[l] ?? [], output = l === count - 1;
+    const title = l === 0 ? "Inputs" : output ? "Outputs" : `Hidden ${l}`;
+    svg.append(create("text", {x, y: 19, "text-anchor": "middle", class: "network-label"}, title));
+    svg.append(create("text", {x, y: 37, "text-anchor": "middle", class: "network-count"}, l === 0 ? "11 sensors" : output ? "3 scores" : `${s.settings.hidden} neurons`));
+    if (l < count - 1) {
+      svg.append(create("line", {x1: x + 13, y1: 180, x2: x + spacing - 13, y2: 180, class: "network-flow", "marker-end": "url(#network-arrow)"}));
+    }
+    const nodes = l === 0 ? 11 : output ? 3 : Math.min(8, s.settings.hidden);
+    const max = Math.max(1e-9, ...values.map(Math.abs));
+    for (let n = 0; n < nodes; n++) {
+      const y = nodes === 1 ? 143 : 55 + n * 110 / (nodes - 1);
+      const circle = create("circle", {cx: x, cy: y, r: 5, class: "network-node", opacity: values.length ? 0.25 + 0.75 * Math.min(1, Math.abs(values[n]) / max) : 0.25});
+      const label = l === 0 ? sensorNames[n] : output ? actionNames[n] : `Hidden layer ${l}, neuron ${n + 1}`;
+      circle.append(create("title", {}, `${label}: ${(values[n] ?? 0).toFixed(3)}`)); svg.append(circle);
+      if (output) {
+        svg.append(create("text", {x: x + 14, y: y - 2, class: "network-action"}, actionNames[n]));
+        svg.append(create("text", {x: x + 14, y: y + 13, class: "network-score"}, (values[n] ?? 0).toFixed(2)));
+      }
+    }
+    if (l > 0 && !output && s.settings.hidden > nodes) svg.append(create("text", {x, y: 197, "text-anchor": "middle", class: "network-count"}, `+${s.settings.hidden - nodes} more`));
+  }
+  $("network").replaceChildren(svg);
+  if ($("network-dialog").open) {
+    const large = svg.cloneNode(true);
+    large.querySelector("marker").id = "network-arrow-large";
+    large.querySelectorAll("[marker-end]").forEach(el => el.setAttribute("marker-end", "url(#network-arrow-large)"));
+    $("network-large").replaceChildren(large);
+  }
+
+}
 function drawBoard(g) {
   const c = $("board"),
     x = c.getContext("2d"),
     cell = c.width / g.size;
-  x.fillStyle = "#081722";
+  x.fillStyle = "#102719";
   x.fillRect(0, 0, 600, 600);
-  x.strokeStyle = "#183044";
+  x.strokeStyle = "#35593f";
   x.lineWidth = 1;
-  for (let i = 0; i <= 12; i++) {
+  for (let i = 0; i <= g.size; i++) {
     x.beginPath();
     x.moveTo(i * cell, 0);
     x.lineTo(i * cell, 600);
@@ -471,13 +544,13 @@ function drawBoard(g) {
     x.stroke();
   }
   g.body.forEach(([a, b], i) => {
-    x.fillStyle = i ? "#629ec7" : "#bce5ff";
+    x.fillStyle = i ? "#69af50" : "#a7dc70";
     x.beginPath();
-    x.roundRect(a * cell + 3, b * cell + 3, cell - 6, cell - 6, 9);
+    x.roundRect(a * cell + cell * 0.2, b * cell + cell * 0.2, cell * 0.6, cell * 0.6, 2);
     x.fill();
   });
   if (g.food) {
-    x.fillStyle = "#efcb88";
+    x.fillStyle = "#ef615b";
     x.beginPath();
     x.arc(
       (g.food[0] + 0.5) * cell,
@@ -501,12 +574,12 @@ function drawBoard(g) {
       [-1, 0],
       [0, -1],
     ][g.direction];
-  x.fillStyle = "#081722";
+  x.fillStyle = "#102719";
   for (const sign of [-1, 1]) {
     x.beginPath();
     x.arc(
-      (a + 0.5) * cell + d[0] * 10 + d[1] * sign * 9,
-      (b + 0.5) * cell + d[1] * 10 + d[0] * sign * 9,
+      (a + 0.5) * cell + d[0] * cell * 0.2 + d[1] * sign * cell * 0.18,
+      (b + 0.5) * cell + d[1] * cell * 0.2 + d[0] * sign * cell * 0.18,
       3,
       0,
       Math.PI * 2,
@@ -559,5 +632,5 @@ function drawChart(history) {
   );
 }
 message(
-  "Your lab is ready. Start learning from scratch, or try the saved trained snake.",
+  "Ready. Press Start learning, or load the optional example.",
 );
