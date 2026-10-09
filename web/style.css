@@ -825,7 +825,7 @@ body.midnight .shap-track, body.midnight .bar-track { background: #303632; }
 body.midnight .shap-bar { background: #AFD58B; }
 body.midnight .shap-bar.negative { background: #729565; }
 body.midnight input[type="range"] { accent-color: #AFD58B; }
-body.midnight #board { background: #0A2112; }
+body.midnight #board { background: #14201a; }
 #midnight { border-radius: 999px; }
 @media(max-width:680px) { nav { flex-wrap: wrap; justify-content: flex-end; } }
 
