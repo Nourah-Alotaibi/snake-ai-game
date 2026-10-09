@@ -476,7 +476,7 @@ function render(s) {
     sensorNames.forEach((name, i) => {
       const el = document.createElement("span");
       el.textContent = name;
-      el.className = s.decision?.state[i] ? "on" : "";
+      el.className = (s.inspection?.activations[0]?.[i] ?? s.decision?.state[i]) ? "on" : "";
       $("sensors").append(el);
     });
   }
