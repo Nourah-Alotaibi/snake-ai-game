@@ -25,11 +25,18 @@ export function createInspector(worker) {
     ui.querySelector('.inspect-step').onclick = () => worker.postMessage({type:'step'});
     ui.querySelector('.inspect-spacing').oninput = e => { spacing = +e.target.value; render(state); };
     ui.querySelector('.neuron-picker').onchange = e => { selected = e.target.value.split(':').map(Number); render(state); };
+    // Select on press: live redraws can replace a circle before the click completes.
+    host.addEventListener('pointerdown', e => choose(e.target));
     host.addEventListener('click', e => choose(e.target));
     host.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { if (e.target.dataset.layer) { e.preventDefault(); choose(e.target); } }
+      if (e.key === 'Enter' || e.key === ' ') { if (e.target.closest('[data-layer][data-neuron]')) { e.preventDefault(); choose(e.target); } }
     });
-    function choose(el) { if (el.dataset.layer !== undefined) { selected = [+el.dataset.layer,+el.dataset.neuron]; render(state); } }
+    function choose(el) {
+      const node = el.closest('[data-layer][data-neuron]');
+      if (!node || !host.contains(node)) return;
+      selected = [+node.dataset.layer,+node.dataset.neuron];
+      render(state);
+    }
     return {host,ui};
   });
   function render(s) {
@@ -43,7 +50,7 @@ export function createInspector(worker) {
     const [l,n] = selected, last = layers.length - 1;
     const name = (layer,i) => layer === 0 ? sensors[i] : layer === last ? actions[i] : `Hidden ${layer} · neuron ${i+1}`;
     hosts.forEach(({host,ui}, index) => {
-      if (index && !document.getElementById('network-dialog').open) return;
+      // Keep both inspector menus in sync, including the collapsed popup.
       const width = 70 + last * spacing + 145, height = 280;
       const svg = svgEl('svg',{viewBox:`0 0 ${width} ${height}`,class:'interactive-network',role:'group','aria-label':'Interactive neural network. Select a neuron to inspect its calculation.'});
       svg.style.width = spacing <= 115 ? "100%" : `${Math.max(host.clientWidth, 320) * spacing / 115}px`;
@@ -63,7 +70,7 @@ export function createInspector(worker) {
         indices[k].forEach(j => {
           const node = svgEl('circle',{cx:x,cy:y(k,j),r:7,class:`network-node ${k===l&&j===n?'selected-node':''} ${k===last&&j===preferred?'preferred-node':''}`,opacity:.35+.65*Math.min(1,Math.abs(a[j])/max),tabindex:0,role:'button','aria-label':`${name(k,j)}: ${fmt(a[j])}`,'aria-pressed':String(k===l&&j===n),'data-layer':k,'data-neuron':j});
           node.append(svgEl('title',{},`${name(k,j)}: ${fmt(a[j])}`)); svg.append(node);
-          if (k===last) { svg.append(svgEl('text',{x:x+15,y:y(k,j)-4,class:'network-action'},actions[j])); svg.append(svgEl('text',{x:x+15,y:y(k,j)+16,class:'network-score'},fmt(a[j]))); }
+          if (k===last) { svg.append(svgEl('text',{x:x+15,y:y(k,j)-4,class:'network-action','data-layer':k,'data-neuron':j},actions[j])); svg.append(svgEl('text',{x:x+15,y:y(k,j)+16,class:'network-score','data-layer':k,'data-neuron':j},fmt(a[j]))); }
         });
         if (counts[k]<a.length) svg.append(svgEl('text',{x,y:263,'text-anchor':'middle',class:'network-count'},`+${a.length-counts[k]} more · use selector`));
       });
