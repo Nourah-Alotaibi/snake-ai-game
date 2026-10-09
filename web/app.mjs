@@ -10,13 +10,13 @@ let latest = null,
 const fields = [
   [
     "learningRate",
-    "Learning rate",
+    "Learning rate · α",
     "How big is each correction? Too large can erase useful learning.",
     [0.0001, 0.0005, 0.001, 0.003, 0.01, 0.02],
   ],
   [
     "epsilonStart",
-    "Starting curiosity · ε",
+    "Initial exploration rate · ε (Starting curiosity)",
     "Chance of trying a random move, even if another looks better.",
     0,
     1,
@@ -24,7 +24,7 @@ const fields = [
   ],
   [
     "gamma",
-    "Future thinking · γ",
+    "Discount factor · γ (Future thinking)",
     "How much future snacks matter. Zero cares only about the next reward.",
     0,
     0.99,
@@ -32,7 +32,7 @@ const fields = [
   ],
   [
     "counterfactual",
-    "“What if?” replay",
+    "Model-based replay (“What if?” replay)",
     "Add outcomes from the two moves it did not take. Uses two extra simulator queries.",
     [
       [1, "On · learn from alternatives"],
@@ -41,13 +41,13 @@ const fields = [
   ],
   [
     "epsilonDecay",
-    "Curiosity fade",
+    "Exploration decay (Curiosity fade)",
     "Multiplied after each training game. Closer to one stays curious longer.",
     [0.95, 0.97, 0.985, 0.995, 1],
   ],
   [
     "epsilonMin",
-    "Curiosity floor",
+    "Minimum exploration rate (Curiosity floor)",
     "Keep a little exploration even after many games. Must not exceed starting curiosity.",
     0,
     0.5,
@@ -55,37 +55,37 @@ const fields = [
   ],
   [
     "hidden",
-    "Neurons per layer",
+    "Hidden-layer width (Neurons per layer)",
     "More capacity, more computation. Bigger is not automatically better.",
     [8, 16, 32, 64],
   ],
   [
     "depth",
-    "Hidden layers",
+    "Network depth (Hidden layers)",
     "Extra stages for combining the eleven signals.",
     [1, 2, 3],
   ],
   [
     "batchSize",
-    "Memories per lesson",
+    "Mini-batch size (Memories per lesson)",
     "How many replay examples share one gradient update.",
     [8, 16, 32, 64],
   ],
   [
     "memorySize",
-    "Replay capacity",
+    "Replay buffer size (Replay capacity)",
     "Recent experiences kept in its notebook. Old ones are replaced.",
     [128, 500, 2000, 5000, 10000],
   ],
   [
     "targetEvery",
-    "Target refresh",
+    "Target-network update interval (Target refresh)",
     "Copy the learner to its stable reference every N updates.",
     [10, 50, 200, 500, 1000],
   ],
   [
     "foodReward",
-    "Snack reward",
+    "Food reward (Snack reward)",
     "How strongly food is rewarded. Changes what it tries to maximize.",
     1,
     20,
@@ -93,7 +93,7 @@ const fields = [
   ],
   [
     "deathPenalty",
-    "Collision penalty",
+    "Terminal penalty (Collision penalty)",
     "Cost of hitting a wall, itself, or running out of time.",
     1,
     20,
@@ -101,7 +101,7 @@ const fields = [
   ],
   [
     "guidance",
-    "Distance hint",
+    "Distance reward shaping (Distance hint)",
     "Extra reward for getting closer to food; a cost for moving away. Zero removes this designed hint.",
     0,
     0.5,
@@ -109,7 +109,7 @@ const fields = [
   ],
   [
     "seed",
-    "Experiment seed",
+    "Random seed (Experiment seed)",
     "Same seed and settings reproduce the same training sequence.",
     1,
     2147483647,
@@ -122,7 +122,10 @@ for (let i = 0; i < fields.length; i++) {
   wrap.className = "control";
   const title = document.createElement("label");
   title.htmlFor = key;
-  title.textContent = label;
+  const labelText = document.createElement("span");
+  labelText.className = "parameter-name";
+  labelText.textContent = label;
+  title.append(labelText);
   const output = document.createElement("output");
   output.id = key + "-value";
   title.append(output);

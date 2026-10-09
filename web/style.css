@@ -956,3 +956,6 @@ body .interactive-network .network-links .selected-link { opacity:.65; stroke-wi
 .panel-move-controls button:focus-visible,.panel-order-reset:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
 .panel-order-reset { margin:0 0 12px; font-size:12px; min-height:36px; }
 @media(max-width:600px) { .controls-column .panel-move-controls button,.play-column .panel-move-controls button { min-height:44px; font-size:14px; } }
+
+.control label .parameter-name { flex:1; min-width:0; overflow-wrap:break-word; line-height:1.4; }
+.control label output { flex-shrink:0; }
