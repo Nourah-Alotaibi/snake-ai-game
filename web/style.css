@@ -899,3 +899,19 @@ body:not(.light):not(.midnight) .shap-bar.negative { background:#729e91; }
 body:not(.light):not(.midnight) .network-links line { opacity:.18; }
 body:not(.light):not(.midnight) .primary:hover { background:#98e0bf; }
 body:not(.light):not(.midnight) #board { background:#0c241b; }
+
+/* Emerald depth inspired by the reference, with calm rather than neon accents. */
+body:not(.light):not(.midnight) {
+ --bg:#0c1916; --panel:#142b24; --soft:#214237; --accent:#8bcdb3;
+ --ink:#edf4ef; --muted:#b5c9bf; --line:#34574a; --gold:#b8d2ac;
+ background:radial-gradient(ellipse at 8% 0%,#15453966,transparent 48%),linear-gradient(145deg,#0d201a,#0c1916 65%);
+}
+body:not(.light):not(.midnight) .panel,body:not(.light):not(.midnight) .deep-learning {
+ background:linear-gradient(145deg,#19382d,#122820 80%);
+}
+body:not(.light):not(.midnight) .primary { background:linear-gradient(110deg,#acd9bd,#83c7ac); }
+body:not(.light):not(.midnight) .primary:hover { background:linear-gradient(110deg,#b7e0c7,#94d2b9); }
+body:not(.light):not(.midnight) .shap-bar { background:#8bcdb3; }
+body:not(.light):not(.midnight) .shap-bar.negative { background:#729e91; }
+#chart-empty { padding:18px 0; color:var(--muted); font-size:14px; line-height:1.5; }
+.deep-learning .results-row #chart { max-height:none; aspect-ratio:4; height:auto; }

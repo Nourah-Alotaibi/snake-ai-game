@@ -597,10 +597,10 @@ function drawChart(history) {
     accent = styles.getPropertyValue("--accent");
   x.fillStyle = muted;
   x.font = "12px system-ui";
-  if (history.length < 2) {
-    x.fillText("A learning curve will grow here after a few games.", 15, 80);
-    return;
-  }
+  const empty = history.length < 2;
+  c.style.display = empty ? "none" : "block";
+  $("chart-empty").hidden = !empty;
+  if (empty) return;
   const max = Math.max(5, ...history.map((v) => v.score));
   x.fillText(String(max) + " apples", 5, 14);
   x.fillText("game " + history[0].episode, 5, h - 2);
@@ -633,3 +633,9 @@ function drawChart(history) {
 message(
   "Ready. Press Start learning, or load the optional example.",
 );
+
+// Opening the optional section reveals its complete learning workflow.
+const optionalSection = document.querySelector('.deep-learning');
+optionalSection.addEventListener('toggle', () => {
+  if (optionalSection.open) optionalSection.querySelectorAll('details').forEach(detail => { detail.open = true; });
+});
