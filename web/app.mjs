@@ -228,11 +228,19 @@ $("watch").onclick = () => {
   );
 };
 $("speed").onchange = () => send("speed", { value: Number($("speed").value) });
-$("theme").onclick = () => {
-  $("theme").textContent = document.body.classList.toggle("light")
-    ? "Dark mode"
-    : "Light mode";
-};
+let currentTheme = "dark";
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.body.classList.toggle("light", theme === "light");
+  document.body.classList.toggle("midnight", theme === "midnight");
+  $("theme").textContent = theme === "light" ? "Dark mode" : "Light mode";
+  $("midnight").setAttribute("aria-pressed", String(theme === "midnight"));
+  try { localStorage.setItem("snake-lab-theme", theme); } catch {}
+  if (latest) render(latest);
+}
+$("theme").onclick = () => applyTheme(currentTheme === "light" ? "dark" : "light");
+$("midnight").onclick = () => applyTheme(currentTheme === "midnight" ? "dark" : "midnight");
+try { const saved = localStorage.getItem("snake-lab-theme"); if (["dark", "light", "midnight"].includes(saved)) applyTheme(saved); } catch {}
 $("example").onclick = async () => {
   try {
     $("example").disabled = true;
@@ -531,9 +539,9 @@ function drawBoard(g) {
   const c = $("board"),
     x = c.getContext("2d"),
     cell = c.width / g.size;
-  x.fillStyle = "#102719";
+  x.fillStyle = (document.body.classList.contains("midnight") || document.body.classList.contains("light")) ? "#0A2112" : "#102719";
   x.fillRect(0, 0, 600, 600);
-  x.strokeStyle = "#35593f";
+  x.strokeStyle = (document.body.classList.contains("midnight") || document.body.classList.contains("light")) ? "#203C28" : "#35593f";
   x.lineWidth = 1;
   for (let i = 0; i <= g.size; i++) {
     x.beginPath();
@@ -544,13 +552,13 @@ function drawBoard(g) {
     x.stroke();
   }
   g.body.forEach(([a, b], i) => {
-    x.fillStyle = i ? "#69af50" : "#a7dc70";
+    x.fillStyle = (document.body.classList.contains("midnight") || document.body.classList.contains("light")) ? "#83D34E" : (i ? "#69af50" : "#a7dc70");
     x.beginPath();
     x.roundRect(a * cell + cell * 0.2, b * cell + cell * 0.2, cell * 0.6, cell * 0.6, 2);
     x.fill();
   });
   if (g.food) {
-    x.fillStyle = "#ef615b";
+    x.fillStyle = (document.body.classList.contains("midnight") || document.body.classList.contains("light")) ? "#F06459" : "#ef615b";
     x.beginPath();
     x.arc(
       (g.food[0] + 0.5) * cell,
@@ -574,7 +582,7 @@ function drawBoard(g) {
       [-1, 0],
       [0, -1],
     ][g.direction];
-  x.fillStyle = "#102719";
+  x.fillStyle = (document.body.classList.contains("midnight") || document.body.classList.contains("light")) ? "#0A2112" : "#102719";
   for (const sign of [-1, 1]) {
     x.beginPath();
     x.arc(
@@ -619,7 +627,7 @@ function drawChart(history) {
   }
   line(
     history.map((v) => v.score),
-    "#647b9266",
+    document.body.classList.contains("midnight") ? "#729565" : (document.body.classList.contains("light") ? "#63875C" : "#647b9266"),
     1,
   );
   line(
