@@ -856,3 +856,13 @@ body.midnight input[type="range"]::-webkit-slider-runnable-track { background: #
 body.light input[type="range"]::-webkit-slider-runnable-track { background: #B7C5AF; border-radius: 999px; }
 
 body:not(.light):not(.midnight) #board { background:#10251a; }
+
+/* Refined Forest Green: signature colors with clearer visual separation. */
+body:not(.light):not(.midnight) {
+ --bg:#0E1F18; --panel:#1B352A; --soft:#294B3B;
+ --ink:#F2F6EF; --muted:#BDCEBF; --accent:#BCE58F;
+ --line:#456653; --gold:#D6E19A;
+}
+body:not(.light):not(.midnight) .shap-bar { background:#BCE58F; }
+body:not(.light):not(.midnight) .shap-bar.negative { background:#81B6A0; }
+body:not(.light):not(.midnight) .network-links line { opacity:.18; }

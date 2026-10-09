@@ -543,7 +543,7 @@ function drawBoard(g) {
     x.stroke();
   }
   g.body.forEach(([a, b], i) => {
-    x.fillStyle = document.body.classList.contains("midnight") ? (i ? "#94b978" : "#AFD58B") : (document.body.classList.contains("light") ? "#83D34E" : (i ? "#85b398" : "#b2cfb6"));
+    x.fillStyle = document.body.classList.contains("midnight") ? (i ? "#94b978" : "#AFD58B") : (document.body.classList.contains("light") ? "#83D34E" : (i ? "#98CC77" : "#D3F49D"));
     x.beginPath();
     x.roundRect(a * cell + cell * 0.2, b * cell + cell * 0.2, cell * 0.6, cell * 0.6, 2);
     x.fill();
