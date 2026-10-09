@@ -766,7 +766,7 @@ header, main { max-width: 1300px; }
   #board { width: min(100%, 410px, calc(100dvh - 300px)); }
 }
 
-:root { --bg: #0d1b13; --panel: #14271c; --soft: #20382a; --ink: #f0f5ec; --muted: #bdcdbd; --line: #405d47; --accent: #a7d785; --gold: #d3dfa1; }
+:root { --bg: #031109; --panel: #0b2115; --soft: #163024; --ink: #f0f5ec; --muted: #bdcdbd; --line: #355741; --accent: #a7d785; --gold: #d3dfa1; }
 body.light { --bg: #f4f5f6; --panel: #ffffff; --soft: #e7eaed; --ink: #20252b; --muted: #46515d; --line: #89939e; --accent: #326226; --gold: #596331; }
 @media(max-width:680px) {
   header, main { padding: 14px; }
@@ -799,5 +799,6 @@ body.light { --bg: #f4f5f6; --panel: #ffffff; --soft: #e7eaed; --ink: #20252b; -
   .controls-column .control label { font-size: 14px; flex-wrap: nowrap; }
   .control .help-button { margin-left: auto; flex-shrink: 0; }
 }
+
 
 
