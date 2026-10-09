@@ -530,9 +530,9 @@ function drawBoard(g) {
   const c = $("board"),
     x = c.getContext("2d"),
     cell = c.width / g.size;
-  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#152925");
+  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#10251a");
   x.fillRect(0, 0, 600, 600);
-  x.strokeStyle = document.body.classList.contains("midnight") ? "#293a2c" : (document.body.classList.contains("light") ? "#203C28" : "#354f48");
+  x.strokeStyle = document.body.classList.contains("midnight") ? "#293a2c" : (document.body.classList.contains("light") ? "#203C28" : "#2c4838");
   x.lineWidth = 1;
   for (let i = 0; i <= g.size; i++) {
     x.beginPath();
@@ -573,7 +573,7 @@ function drawBoard(g) {
       [-1, 0],
       [0, -1],
     ][g.direction];
-  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#152925");
+  x.fillStyle = document.body.classList.contains("midnight") ? "#14201a" : (document.body.classList.contains("light") ? "#0A2112" : "#10251a");
   for (const sign of [-1, 1]) {
     x.beginPath();
     x.arc(
