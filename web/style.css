@@ -866,3 +866,10 @@ body:not(.light):not(.midnight) {
 body:not(.light):not(.midnight) .shap-bar { background:#BCE58F; }
 body:not(.light):not(.midnight) .shap-bar.negative { background:#81B6A0; }
 body:not(.light):not(.midnight) .network-links line { opacity:.18; }
+
+/* Optional learning sections follow one consistent reading column. */
+.deep-learning .results-row { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; max-width:960px; margin-inline:auto; }
+.deep-learning .background-notes { width:100%; max-width:960px; margin:12px auto 0; }
+.deep-learning .explain-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; width:100%; max-width:none; margin:12px 0 0; }
+.deep-learning .explain-grid .panel { width:100%; margin:0; padding:14px 16px; }
+.deep-learning .results-row #chart { height:auto; max-height:130px; aspect-ratio:5; }
