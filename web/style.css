@@ -915,3 +915,6 @@ body:not(.light):not(.midnight) .shap-bar { background:#8bcdb3; }
 body:not(.light):not(.midnight) .shap-bar.negative { background:#729e91; }
 #chart-empty { padding:18px 0; color:var(--muted); font-size:14px; line-height:1.5; }
 .deep-learning .results-row #chart { max-height:none; aspect-ratio:4; height:auto; }
+
+.network-guide { padding-left:20px; margin:10px 0 0; font-size:13px; line-height:1.6; color:var(--muted); }
+.network-guide li { margin:8px 0; }

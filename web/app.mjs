@@ -456,6 +456,16 @@ function render(s) {
     $("q-values").append(row);
   });
   $("architecture").textContent = `11 sensor inputs → ${s.settings.depth} hidden ${s.settings.depth === 1 ? "layer" : "layers"} (${s.settings.hidden} neurons each) → 3 move scores. Hidden layers show up to 8 neurons; brighter dots mean stronger activation. Arrows show information flow, not learned connection strength.`;
+  const guide = $("network-guide");
+  guide.replaceChildren();
+  const items = [
+    "11 inputs (yes = 1, no = 0): Danger ahead, Danger right, Danger left; Facing left, Facing right, Facing up, Facing down; Food left, Food right, Food up, Food down.",
+    ...Array.from({length: s.settings.depth}, (_, i) => `Hidden ${i + 1}: ${s.settings.hidden} neurons. ${i === 0 ? 'Combines the eleven input clues into learned patterns.' : 'Combines patterns from the previous layer to help estimate move values.'} Each neuron uses the same calculation (weighted inputs, a bias, then ReLU), but learns its own weights, so they can respond to different patterns; they do not have fixed names or assigned jobs.`),
+    "3 outputs: Straight, Turn right, Turn left. Each is a Q-value: the model’s estimated future reward for that move, rather than a probability.",
+    "Brighter dots mean stronger current activation. The diagram shows all inputs and outputs, but only up to 8 neurons per hidden layer; +24 more means the remaining neurons are working but not drawn. Connection lines show the network structure, not weight strength."
+  ];
+  for (const text of items) { const item = document.createElement('li'); item.textContent = text; guide.append(item); }
+
   if ($("network")) {
     drawNetwork(s);
     $("sensors").replaceChildren();
