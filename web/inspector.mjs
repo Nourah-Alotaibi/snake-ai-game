@@ -16,7 +16,8 @@ export function createInspector(worker) {
     const ui = document.createElement('section');
     ui.className = 'calculation';
     ui.innerHTML = `<div class="inspection-controls"><button type="button" class="inspect-pause">Pause & inspect</button><button type="button" class="inspect-step" hidden>Next board</button><label>Network spacing <input class="inspect-spacing" type="range" min="100" max="220" value="115"></label></div><h3>Live calculation</h3><p class="inspection-action"></p><label class="neuron-picker-label">Inspect neuron <select class="neuron-picker"></select></label><div class="neuron-summary"></div><details class="math-details"><summary>Show all inputs × weights</summary><div class="math-table-wrap"></div></details>`;
-    host.after(ui);
+    const notes = host.parentElement.querySelector(".network-notes");
+    (notes ?? host).after(ui);
     ui.querySelector('.inspect-pause').onclick = () => {
       if (!inspecting) { wasRunning = !!state?.running; inspecting = true; worker.postMessage({type:'run',value:false}); }
       else { inspecting = false; worker.postMessage({type:'run',value:wasRunning}); }
