@@ -793,3 +793,10 @@ body.light { --bg: #f4f5f6; --panel: #ffffff; --soft: #e7eaed; --ink: #20252b; -
   #network-dialog { padding: 14px; }
   .network-panel .network svg { width: 100%; height: auto; }
 }
+
+@media(max-width:480px) {
+  .settings-panel .control-grid { grid-template-columns: minmax(0,1fr); }
+  .controls-column .control label { font-size: 14px; flex-wrap: nowrap; }
+  .control .help-button { margin-left: auto; flex-shrink: 0; }
+}
+
