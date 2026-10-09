@@ -88,9 +88,3 @@ python Snake_AI_Game.py
 ```
 
 That older file still uses random and food-seeking rules; its learning-rate and neuron labels do not train a model. The actual neural-learning implementation is in `web/core.mjs`. This distinction is deliberate so the project’s history stays understandable.
-
-## The honest limits
-
-The agent sees eleven engineered signals, not the entire board or pixels. It can trap itself, and results depend on the seed, reward design and training budget. What-if replay has privileged access to the exact simulator and adds computation. Three training seeds are a small study. This is a reproducible learning lab and technical extension, not a claim of state-of-the-art Snake performance.
-
-See [the report](REPORT.md) for the method and raw results, and [the source notes](SOURCES.md) for the papers and specific GitHub implementations that informed the work.

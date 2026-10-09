@@ -174,8 +174,7 @@
               aria-label="Training apples per game and rolling 20-game mean"
             ></canvas>
             <p class="small">
-              Dim line: apples each game. Green line: rolling mean. Training can
-              wobble; this is not an accuracy score.
+              Dim line: apples each game. Green line: rolling mean.
             </p>
             <details><summary>Training statistics</summary><div class="mini-stats">
               <span>Updates <b id="updates">0</b></span
@@ -193,8 +192,7 @@
             <button id="evaluate">Run 20 test games</button>
             <div id="evaluation" aria-live="polite"></div>
             <p class="small">
-              A small, repeatable check—not a general performance claim.
-              Repeating these seeds is not fresh validation.
+              Compare the same starting positions for a repeatable check.
             </p>
             <div class="buttons">
               <button id="save">Save brain & diary</button
@@ -233,25 +231,7 @@
             >Read the controlled comparison ↗</a
           >
         </article>
-        <article class="panel">
-          <p class="eyebrow">Limits of the experiment</p>
-          <h2>Learning is messier than a high score.</h2>
-          <p>
-            Weights really update through backpropagation and Adam. A target
-            network and replay buffer help stabilize learning. The optional
-            distance hint is designed into the reward; the agent is not
-            discovering everything unaided.
-          </p>
-          <p>
-            Longer snakes can trap themselves. The small sensor view hides parts
-            of the world, and more neurons or a faster learning rate can make a
-            run worse. These limitations are part of the experiment.
-          </p>
-          <a
-            href="https://github.com/Nourah-Alotaibi/snake-ai-game/blob/main/SOURCES.md"
-            >Ideas, references & credits ↗</a
-          >
-        </article>
+
       </section>
       </details>
         </details>
