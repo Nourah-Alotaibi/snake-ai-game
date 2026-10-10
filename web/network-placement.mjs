@@ -29,8 +29,10 @@ if (network && game) {
   under.onclick = ()=>{place(true);restore.focus({preventScroll:true});};
   restore.onclick = ()=>{place(false);under.focus({preventScroll:true});};
   const style = document.createElement('style');
-  style.textContent = `.game-network-column { grid-column:2;grid-row:1;min-width:0;display:flex;flex-direction:column;gap:12px; } .game-network-column > .board-panel { width:100%;margin-top:var(--game-offset,0px); } .game-network-column > .network-panel { width:100%;max-width:none;margin:0; } .network-panel.under-game > .panel-move-controls:not(.network-placement-controls) { display:none; } .network-placement-controls button { min-height:44px;padding:8px 12px;color:var(--ink);background:var(--soft);border:1px solid var(--line);font-size:13px; } @media(max-width:1100px) { .game-network-column { grid-column:1 / -1;grid-row:1;width:min(100%,470px);justify-self:center; } } @media(max-width:600px) { .game-network-column { grid-column:1;grid-row:1;width:100%; } }`;
+  style.textContent = `body:not(.presenting) .workspace > .deep-learning { margin-top:clamp(480px,65vh,900px); } @media(max-width:600px) { body:not(.presenting) .workspace > .deep-learning { margin-top:64px; } } .game-network-column { grid-column:2;grid-row:1;min-width:0;display:flex;flex-direction:column;gap:12px; } .game-network-column > .board-panel { width:100%;margin-top:var(--game-offset,0px); } .game-network-column > .network-panel { width:100%;max-width:none;margin:0; } .network-panel.under-game > .panel-move-controls:not(.network-placement-controls) { display:none; } .network-placement-controls button { min-height:44px;padding:8px 12px;color:var(--ink);background:var(--soft);border:1px solid var(--line);font-size:13px; } @media(max-width:1100px) { .game-network-column { grid-column:1 / -1;grid-row:1;width:min(100%,470px);justify-self:center; } } @media(max-width:600px) { .game-network-column { grid-column:1;grid-row:1;width:100%; } }`;
   document.head.append(style);
   let below=false;try{below=localStorage.getItem(key)==='under-game';}catch{}
   place(below);
 }
+
+import "./presentation.mjs";
