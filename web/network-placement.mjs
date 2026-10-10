@@ -35,7 +35,7 @@ if (network && game) {
     }
     .network-panel.under-game #sensors span {
       font-size:13px;line-height:1.4;padding:6px 10px;
-      opacity:0.85;min-height:30px;box-sizing:border-box;
+      opacity:0.85;min-height:30px;box-sizing:border-box;display:inline-flex;align-items:center;
     }
     .network-panel.under-game #sensors span.on {
       opacity:1;font-weight:600;color:var(--ink);
