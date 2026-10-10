@@ -57,3 +57,5 @@ if (network && game) {
 
 // Remove the retired presentation entry point from older cached layouts.
 document.getElementById("present")?.remove();
+
+import "./video-tutorial.mjs";
