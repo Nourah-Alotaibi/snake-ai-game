@@ -5,7 +5,7 @@ dialog.setAttribute('aria-label','Snake Learning Lab video tutorial');
 dialog.style.cssText='width:min(960px,92vw);max-height:90vh;padding:16px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;';
 const close=document.createElement('button');close.type='button';close.textContent='Close';close.setAttribute('aria-label','Close video tutorial');
 const video=document.createElement('video');video.controls=true;video.playsInline=true;video.preload='none';
-video.src='https://www.nora-alotaibi.com/blog/snake-learning-lab/snake-tutorial.mp4?v=2';
+video.src='https://www.nora-alotaibi.com/blog/snake-learning-lab/snake-tutorial.mp4?v=3';
 video.style.cssText='display:block;width:100%;max-height:75vh;margin-top:12px;';
 dialog.append(close,video);document.body.append(dialog);
 document.getElementById('tutorial-open')?.before(button);
